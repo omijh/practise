@@ -1,0 +1,30 @@
+{% include 'partials/header.html'%}
+<form  method="post">
+	{% csrf_token %}
+	<label for="first_name">First Name</label><br/>
+	<input type="text" name="first_name" id="first_name"/>
+	<br/>
+	<label for="last_name">Last Name</label> <br/>
+	<input type="text" name="last_name" id="last_name"/>
+	<br/>
+	<label for="email">Email</label><br/>
+	<input type="text" name="email" id="email"><br/>
+	<label for="mobile">Mobile</label>
+	<input type="text" name="mobile" id="mobile"/><br/>
+	<label for="dob">Date Of Birth</label>
+	<input type="date" name="dob" id="dob"/><br/>
+	<label for="location">Location</label>
+	<input type="text" name="location" id="autolocate"/><br/>
+	<br/><br/>
+	<input type="submit" value="Submit"/>
+	<input type="submit"  name="cancel" value="Cancel">
+</form>
+
+<script type="text/javascript">
+	function activateLocation(){
+		var input = document.getElementById('autolocate');
+		var autocomplete = new google.maps.places.Autocomplete(input);
+	}
+</script>
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCUySvobP_zkuJBOrIFEkeFEkDOWbERaeE&libraries=places&callback=activateLocation"></script>
+{% include 'partials/footer.html'%}
