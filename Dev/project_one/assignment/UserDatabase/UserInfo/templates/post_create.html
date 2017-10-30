@@ -1,7 +1,0 @@
-{% include 'partials/header.html'%}
-<form method="POST">
-{% csrf_token %}
-{{ form.as_p }}
-<input type="submit" value="Create">
-</form>
-{% include 'partials/footer.html'%}
