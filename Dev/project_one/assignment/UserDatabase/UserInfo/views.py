@@ -4,24 +4,90 @@ from django.http import HttpResponseForbidden, HttpResponseRedirect
 from django.shortcuts import render, redirect,get_object_or_404,reverse
 from .models import user_info
 from .forms import UserForm
-# Create your views here.
 def index(request):
-	user_info_v = user_info.objects.all()[:10]
+	user_info_v = user_info.objects.all()
 	context = {
 		'user_info': user_info_v
 	}
 	return render(request,'index.html',context)
 
-def addedit(request):
-	form = UserForm(request.POST or None)
-	if form.is_valid():
-		instance = form.save(commit=False)
-		instance.save()
-		return redirect('/')
-	context = {
-		"form": form,
-	}
-	return render(request, "add.html",context)
+def edit(request, id=None, template_name='add.html'):
+    if id or ('id' in request.POST):
+        ids = request.POST['id'] if 'id' in request.POST else ''
+        ids = id if not ids else ids
+        if ids and ids != 'None':
+            instance = get_object_or_404(user_info, pk=ids)
+        else:
+            instance = user_info()
+    else:
+        instance = user_info()
+    form = UserForm(request.POST or None, instance=instance)
+    if request.POST and form.is_valid():
+        form.save()
+        redirect_url = reverse('index')
+        return redirect(redirect_url)
+
+    return render(request, template_name, {
+        'form': form,
+        'id':id,
+    })
+
+# def add(request):
+# 	form = UserForm(request.POST or None)
+# 	if form.is_valid():
+# 		instance = form.save(commit=False)
+# 		instance.save()
+# 		return redirect('/')
+# 	context = {
+# 		"form": form,
+# 	}
+# 	return render(request, "add.html",context)
+# def edit(request, id=None):
+#     recipe = get_object_or_404(user_info, pk=id)
+#     if request.method == "POST":
+#         form = UserForm(request.POST, instance=recipe)
+#         if form.is_valid():
+#             recipe = form.save(commit=False)
+#             # recipe.user = request.user
+#             # recipe.save()
+#             return redirect('index', pk=recipe.pk)
+#     else:
+#         form = UserForm(instance=recipe)
+#     return render(request, 'add.html', {'form': form, 'recipe':recipe})
+# def edit(request,id=None):
+# 	if id:
+# 		print id
+# 		instance = get_object_or_404(user_info,id=id)
+# 		form = UserForm(request.POST or None, instance=instance)
+# 		# else:
+# 		# 	form = UserForm(request.POST or None)
+# 		print form.is_valid()
+# 		if form.is_valid():
+# 			instance = form.save(commit=False)
+# 			instance.save()
+# 			return redirect('/')
+
+# 		context = {
+# 			"first_name": instance.first_name,
+# 			"last_name": instance.last_name,
+# 			"email": instance.email,
+# 			"mobile": instance.mobile,
+# 			"dob": instance.dob,
+# 			"location":instance.location,
+# 			"form": form,
+# 		}
+# 	else:
+# 		form = UserForm(request.POST or None)
+# 		print form.is_valid(),"new"
+# 		if form.is_valid():
+# 			instance = form.save(commit=False)
+# 			instance.save()
+# 			return redirect('/')
+# 		context = {
+# 			"form": form,
+# 		}
+# 	return render(request, "add.html",context)
+
 
 # def addedit(request):
 # 	# user_info_v = user_info.objects.all()
@@ -55,24 +121,7 @@ def addedit(request):
 # 	return render(request,'add.html')
 
 
-def edit(request,slug):
-	instance = get_object_or_404(user_info,slug=slug)
-	form = UserForm(request.POST or None, instance=instance)
-	if form.is_valid():
-		instance = form.save(commit=False)
-		instance.save()
-		return redirect('/')
 
-	context = {
-		"first_name": instance.first_name,
-		"last_name": instance.last_name,
-		"email": instance.email,
-		"mobile": instance.mobile,
-		"dob": instance.dob,
-		"location":instance.location,
-		"form": form,
-	}
-	return render(request, "add.html",context)
 # def edit(request,slug):
 # 	edit = get_object_or_404(user_info,slug=slug)
 # 	print slug
@@ -111,7 +160,7 @@ def edit(request,slug):
 #         form.save()
 
 #         # Save was successful, so redirect to another page
-#         redirect_url = reverse(article_save_success)
+#         redirect_url = reverse('/')
 #         return redirect(redirect_url)
 
 #     return render(request, template_name, {

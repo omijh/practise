@@ -1,25 +1,19 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
-from django.db.models.signals import pre_save
 from django.db import models
-from django.utils.text import slugify
-# Create your models here.
+from django.core.validators import RegexValidator
+
 class user_info(models.Model):
 	first_name = models.CharField(max_length=200)
 	last_name = models.CharField(max_length=200)
-	email = models.CharField(max_length=200)
-	mobile = models.IntegerField()
-	dob = models.DateTimeField()
+	email = models.EmailField()
+	# mobile = models.IntegerField()
+	phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$', message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
+	mobile = models.CharField(validators=[phone_regex], max_length=15, blank=True) # validators should be a list
+	dob = models.DateField()
 	location = models.CharField(max_length=200)
-	slug = models.SlugField(unique=True)
+
 	def __str__(self):
 		return self.first_name
 
-def pre_save_receiver(sender,instance,*args,**kwargs):
-	slug = slugify(str(instance.first_name)+str(instance.last_name))
-	exists = user_info.objects.filter(slug=slug).exists()
-	if exists:
-		slug = "%s-%s"%(slug, instance.id)
-	instance.slug = slug
-pre_save.connect(pre_save_receiver,sender=user_info)
 

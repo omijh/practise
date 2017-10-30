@@ -1,8 +1,16 @@
 {% include 'partials/header.html' %}
 <form action="{% url 'addedit' %}" method="post">
 	{% csrf_token %}
+	<div class="form-group">
 	{{ form.as_p }}
-
+</div>
+<!-- 	<form method="POST" class="post-form">
+	    {% for field in form %}
+	    <div class="form-group">
+	        {{ field }}
+	    </div>
+	    {% endfor %}
+	</form> -->
 <!-- 	<label for="first_name">First Name</label><br/>
 	<input type="text" name="first_name" id="first_name"/>
 	<br/>
@@ -17,9 +25,13 @@
 	<input type="date" name="dob" id="dob"/><br/>
 	<label for="location">Location</label>
 	<input type="text" name="location" id="autolocate"/><br/> -->
+<!-- <input type="submit"  name="cancel" value="Cancel"> -->
+
 	<br/><br/>
 	<input type="submit" value="Submit"/>
-	<input type="submit"  name="cancel" value="Cancel">
+	<input type="hidden" name="id" value="{{ id }}"/>
+	<a href="{% url 'index' %}"><button type="button">Cancel</button></a>
+
 </form>
 <br>
 <a href="/">Go Back </a>
