@@ -1,7 +1,9 @@
 {% include 'partials/header.html' %}
 <form action="{% url 'addedit' %}" method="post">
 	{% csrf_token %}
-	<label for="first_name">First Name</label><br/>
+	{{ form.as_p }}
+
+<!-- 	<label for="first_name">First Name</label><br/>
 	<input type="text" name="first_name" id="first_name"/>
 	<br/>
 	<label for="last_name">Last Name</label> <br/>
@@ -14,9 +16,8 @@
 	<label for="dob">Date Of Birth</label>
 	<input type="date" name="dob" id="dob"/><br/>
 	<label for="location">Location</label>
-	<input type="text" name="location" id="autolocate"/><br/>
+	<input type="text" name="location" id="autolocate"/><br/> -->
 	<br/><br/>
-	<input type="hidden" name="slug" value={{%slug%}}/>
 	<input type="submit" value="Submit"/>
 	<input type="submit"  name="cancel" value="Cancel">
 </form>
@@ -25,7 +26,7 @@
 
 <script type="text/javascript">
 	function activateLocation(){
-		var input = document.getElementById('autolocate');
+		var input = document.getElementById('id_location');
 		var autocomplete = new google.maps.places.Autocomplete(input);
 	}
 </script>
