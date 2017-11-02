@@ -1,0 +1,95 @@
+{% include 'partials/header.html'%}
+<script>
+
+$.fn.dataTable.ext.search.push(
+    function( settings, data, dataIndex ) {
+        var min =  (document.getElementById('deleted').checked)
+        if ( min == true){
+        	min = "True"
+        }
+        else {
+        	min = "False"
+        }
+        var val = data[6];
+        console.log("this is min"+min+" val is "+val)
+        if (min == 'False'){
+	        if ( val == min)
+	        {
+	            return true;
+	        }
+	        return false;
+    	}
+    	else{
+    		return true
+    	}
+}
+);
+
+$(document).ready(function(){
+var table = $('#item_master').DataTable(
+ {
+  "columnDefs": [
+    { "visible": false, "targets": 6 }
+  ]
+}
+); 
+});
+
+function handleClick(cb) {
+$("#item_master").dataTable().fnDestroy();
+
+var table = $('#item_master').DataTable(
+ {
+  "columnDefs": [
+    { "visible": false, "targets": 6 }
+  ]
+}
+); 
+
+	    table.draw();
+
+}
+
+</script>
+
+<p>
+
+<table border="0" cellspacing="5" cellpadding="5">
+        <tbody><tr>
+            <td>Include Deleted Rows:</td>
+            <td><input type="checkbox" name="deleted" value="yes"  onclick='handleClick(this);' id="deleted"> </td>
+
+        </tr>
+    </tbody></table>
+<table id="item_master" class="display" data-page-length='5' width="100%">
+    <thead>
+    	<th>Item Id</th>
+        <th>Item Name</th>
+        <th>Item Description</th>
+        <th>Item Cost</th>
+        <th>Vendor</th>
+        <th>Actions</th>
+        <th>Toggle</th>
+    </thead>
+    <tbody>
+    {% for row in info_sys %} 
+    <tr>
+        <td>{{ row.id }}</td>
+        <td>{{ row.item_name }}</td>
+        <td>{{ row.description }}</td>
+        <td>{{ row.cost }}</td>
+        <td>{{ row.vendor }}</td>
+        <td><a href="{% url 'edit' id=row.id %}"><button type="button" class="btn btn-default"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Edit</button></a><a href="{% url 'delete' id=row.id %}"><button type="button" class="btn btn-default"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Delete</button></a></td>
+        <td>{{ row.isActive }}</td>
+    </tr>
+    {% endfor %}  
+    </tbody>
+ </table>
+</p>
+
+ <a href="{% url 'add'  %}">Add New Item</a>
+
+
+
+
+{% include 'partials/footer.html'%}
