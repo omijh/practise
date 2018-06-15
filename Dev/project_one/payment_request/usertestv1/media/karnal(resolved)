@@ -1,0 +1,449 @@
+
+select tt."Payment Status",tt."CUSTOMER ID" ,tt."CFOB CHECK",tt."CUSTOMER NAME",tt."DATE",tt."RECEIPT NUMBER",tt."VOUCHER TYPE",tt."NARRATION",tt."DEBIT AMOUNT",
+tt."CREDIT AMOUNT",tt."ACCOUNT STATUS",tt."ACCOUNT NAME",tt."INVOICE NUMBER",cast(tt."INVOICE DATE" as date),tt."SERVICE TAX",tt."SERVICE CLASSIFICATION",
+tt."CSE NAME",tt."CCE",tt."Grand Total",tt."AGAINST INVOICE NUMBER",cast(tt."AGAINST INVOICE DATE" as date),tt."TAX RATE",tt."AGAINST SERVICE CLASSIFICATION",tt."AGAINST CSE NAME",tt."AGAINST CCE",tt."AGAINST GRAND TOTAL",tt."BANK ONE CHEQUE NO",cast (tt."BANK ONE CHEQUE DATE" as date),tt."CHEQUE AMOUNT",cast(tt."Bank Reco Date" as date),tt."DRAWEE ONE NAME",tt."BANK BRANCH NAME",  "NEFT BENEFICIARY  BANK NAME", "NEFT BRANCH NAME", "NEFT PAYMENT REFERENCE NUMBER", cast ("NEFT DATE" as date), "NEFT AMOUNT",tt."DD Number",cast(tt."DD Date"as date),cast(tt."Drawee Bank Name" as text), "Bank Branch Name",tt."DD Drawn Name",tt."DD AMOUNT",tt."SECURITY CSE", "SECURITY REFERENCE NO",cast(tt."SECURITY REFERENCE DATE" as Date),tt."SECURITY REFERENCE AMOUNT",tt."SECURITY NEW CSE", "SECURITY NEW REFERENCE NO",cast(tt."SECURITY NEW REFERENCE DATE"as date),tt."SECURITY NEW REFERENCE AMOUNT",tt."ADVANCE CSE",tt."ADVANCE REFERENCE NO",cast(tt."ADVANCE REFERENCE DATE" as date),tt."ADVANCE REFERENCE AMOUNT", "ADVANCE TAX RATE",tt."ADVANCE SERVICE CLASSIFICATION",  "SUNDRY CSE", "SUNDRY PAYMENT NO",cast(tt."SUNDRY PAYMENT DATE" as date),tt."SUNDRY PAYMENT AMOUNT",  tt."DEBIT NOTE NO", tt."DEBIT NOTE CREDIT AMOUNT SRCH"  from (
+
+SELECT distinct(case when (b.credit_amount = 0.0  and b.debit_amount = 0.0) then null else 
+        case when b.type='credit' and i.ref_amount <> 0.0 and (select count(*) from advance_invoice_line where advance_invoice_line_id=b.id)<1 then a.payment_status
+        when b.type='credit' and irh.invoice_paid_amount>0 then  a.payment_status
+        when b.type='credit' and g.ref_amount>0 then a.payment_status
+        when b.type='credit' and h.ref_amount > 0 then a.payment_status
+        when b.type='credit' and j.ref_amount > 0 then a.payment_status
+        when b.type='credit' and k.payment_amount >0  then  a.payment_status
+        when b.type='credit' and m.invoice_amount >0  then 
+                case when (m.partial_payment_amount = 0.0 or m.partial_payment_amount is null) then a.payment_status
+                else a.payment_status end 
+        when b.type='credit' and o.neft_amount  > 0 then a.payment_status
+        when b.type='credit' and b.acc_status <> 'advance' and (select id from debit_note where sales_debit_id=b.id)=0 then a.payment_status
+        when b.type='debit' and i.ref_amount <> 0.0 then a.payment_status
+        when b.type='debit' and irh.invoice_paid_amount>0 then a.payment_status
+        when b.type='debit' and g.ref_amount>0 then a.payment_status
+        when b.type='debit' and h.ref_amount > 0 then a.payment_status
+        when b.type='debit' and j.ref_amount > 0 then a.payment_status
+        when b.type='debit' and k.payment_amount >0  then  a.payment_status
+        when b.type='debit' and m.invoice_amount >0  then a.payment_status
+        when b.type='debit' and n.credit_amount_srch > 0 then a.payment_status
+        when b.type='debit' and o.neft_amount  > 0 then a.payment_status
+        when b.type='debit' and c.cheque_amount > 0 then a.payment_status
+        when b.type='debit' then a.payment_status
+        end 
+   end ) as "Payment Status",
+/*case when (b.credit_amount = 0.0  and b.debit_amount = 0.0) then NUll else 
+        a.payment_status end as "Payment Status",*/
+case when (b.credit_amount = 0.0  and b.debit_amount = 0.0) then NUll else  
+        case when (select aa.account_selection from account_account aa where aa.id=b.account_id) = 'against_ref' or 
+        (select aa.account_selection from account_account aa where aa.id=b.account_id) = 'advance' or b.type = 'credit' then 
+    (select r.ou_id from res_partner r where r.id=a.customer_name) 
+       
+        end end as "CUSTOMER ID", 
+case when (b.credit_amount = 0.0  and b.debit_amount = 0.0) then NUll else 
+        case when (select rp.name from res_partner rp where rp.id=b.customer_name)='CFOB' then 
+        True 
+        else    False 
+        end end as "CFOB CHECK", 
+case when (b.credit_amount = 0.0  and b.debit_amount = 0.0) then NUll 
+	when a.customer_name is null and b.type='credit' then (select name from account_account  where id in (select account_id from account_sales_receipts_line where receipt_id=a.id and type='credit' limit 1))else 
+        (select rp.name from res_partner rp where rp.id=b.customer_name) end as "CUSTOMER NAME",
+        case when b.acc_status = 'against_ref' then a.receipt_date else a.receipt_date end as "DATE",
+        --and (select id from debit_note where sales_debit_id=b.id)=0 
+        a.receipt_no  as "RECEIPT NUMBER",
+        a.voucher_type as "VOUCHER TYPE",
+        a.narration as "NARRATION",
+case when (b.credit_amount = 0.0  and b.debit_amount = 0.0) then 0.0 else  
+        case 
+        when b.type='debit' and i.ref_amount <> 0.0 then i.ref_amount
+        when b.type='debit' and irh.invoice_paid_amount>0 then irh.invoice_paid_amount  
+        when b.type='debit' and g.ref_amount>0 then g.ref_amount
+        when b.type='debit' and h.ref_amount > 0 then h.ref_amount
+        when b.type='debit' and j.ref_amount > 0 then j.ref_amount
+        when b.type='debit' and k.payment_amount >0  then  k.payment_amount
+        when b.type='debit' and m.invoice_amount >0  then m.invoice_amount
+        when b.type='debit' and n.credit_amount_srch > 0 then n.credit_amount_srch
+        when b.type='debit' and o.neft_amount  > 0 then o.neft_amount
+        when b.type='debit' and c.cheque_amount > 0 then c.cheque_amount
+        when b.type='debit' then b.debit_amount
+        end end as "DEBIT AMOUNT",
+         
+case when (b.credit_amount = 0.0  and b.debit_amount = 0.0) then 0.0 else 
+        case 
+        when b.type='credit' and i.ref_amount <> 0.0 and (select count(*) from advance_invoice_line where advance_invoice_line_id=b.id)<1 then i.ref_amount
+        when b.type='credit' and irh.invoice_paid_amount>0 then  irh.invoice_paid_amount  
+        when b.type='credit' and g.ref_amount>0 then g.ref_amount
+        when b.type='credit' and h.ref_amount > 0 then h.ref_amount
+        when b.type='credit' and j.ref_amount > 0 then j.ref_amount
+        when b.type='credit' and k.payment_amount >0  then  k.payment_amount
+        when b.type='credit' and m.invoice_amount >0  then case when (m.partial_payment_amount = 0.0 or m.partial_payment_amount is null) then m.invoice_amount  
+        else m.partial_payment_amount 
+        end 
+        --when b.type='credit' and n.credit_amount_srch > 0 then n.credit_amount_srch
+        when b.type='credit' and o.neft_amount  > 0 then o.neft_amount
+        when b.type='credit' and b.acc_status <> 'advance' and (select id from debit_note where sales_debit_id=b.id)=0 then b.credit_amount
+        end end as "CREDIT AMOUNT",
+
+case when (b.credit_amount = 0.0  and b.debit_amount = 0.0) then NUll else       
+       case when (select name from account_account where id=b.account_id) ilike '%Advance receipt%' then 'advance' else b.acc_status  end end as "ACCOUNT STATUS",
+case when (b.credit_amount = 0.0  and b.debit_amount = 0.0) then 'cancelled' else  
+        (select t.name from account_account t where t.id=b.account_id) end as "ACCOUNT NAME", 
+case when (b.credit_amount = 0.0  and b.debit_amount = 0.0) then NUll else 
+        irh.invoice_number end as "INVOICE NUMBER",
+case when (b.credit_amount = 0.0  and b.debit_amount = 0.0) then NUll else 
+        cast (irh.invoice_date as text)end as "INVOICE DATE",
+case when (b.credit_amount = 0.0  and b.debit_amount = 0.0) then NUll else  
+        /*(select case when exempted is null or exempted=False then tax_rate else '' end from invoice_adhoc_master where id=irh.invoice_receipt_history_id)*/ irh.tax_rate end as "SERVICE TAX",
+ 
+case when (b.credit_amount = 0.0  and b.debit_amount = 0.0) then NUll else 
+         case 
+             when irh.service_classification='residential' then 'Residential Service' 
+             when irh.service_classification='commercial' then 'Commercial Service' 
+             when irh.service_classification='port' then 'Port Service' 
+             when irh.service_classification='airport' then 'Airport Service' 
+             when irh.service_classification='exempted' then 'Exempted' 
+        else ''  
+         end end as "SERVICE CLASSIFICATION", 
+case when (b.credit_amount = 0.0  and b.debit_amount = 0.0) then NUll else 
+        (select concat_ws(' ',rr.name,he.last_name) from resource_resource rr join hr_employee he 
+on rr.id=he.resource_id where he.id=irh.cse)  end as "CSE NAME",
+case when (b.credit_amount = 0.0  and b.debit_amount = 0.0) then NUll else  
+        (select r.name from res_users r where r.id=(select cce from invoice_adhoc_master where id=irh.invoice_receipt_history_id)) end as "CCE", 
+case when (b.credit_amount = 0.0  and b.debit_amount = 0.0) then NUll else      
+        case when (b.credit_amount = 0.0  and b.debit_amount = 0.0) then 0.0 else
+        case 
+        /*when b.type='credit' and i.ref_amount <> 0.0 and (select count(*) from advance_invoice_line where advance_invoice_line_id=b.id)>1 then i.ref_amount*/
+        when b.type='credit' and irh.invoice_paid_amount>0 then irh.invoice_paid_amount  
+        when b.type='credit' and g.ref_amount>0 then g.ref_amount
+        when b.type='credit' and h.ref_amount > 0 then h.ref_amount
+        when b.type='credit' and j.ref_amount > 0 then j.ref_amount
+        when b.type='credit' and k.payment_amount >0  then  k.payment_amount
+        when b.type='credit' and m.invoice_amount >0  then case when (m.partial_payment_amount = 0.0 or m.partial_payment_amount is null) then m.invoice_amount else m.partial_payment_amount end 
+        --when b.type='credit' and n.credit_amount_srch > 0 then n.credit_amount_srch
+        when b.type='credit' and o.neft_amount  > 0 then o.neft_amount
+        when b.type='credit' and b.acc_status <> 'advance' and (select id from debit_note where sales_debit_id=b.id)=0 then b.credit_amount
+        end end end  as "Grand Total",
+--select * from debit_note where sales_debit_id  =9674
+--select * from account_sales_receipts_line where id=9674
+case when (b.credit_amount = 0.0  and b.debit_amount = 0.0) then NUll else 
+       case when (select invoice_number from advance_invoice_line ail where advance_invoice_line_id=b.id and ail.id=m.id) is not null then a.receipt_no end  end as "AGAINST INVOICE NUMBER",
+case when (b.credit_amount = 0.0  and b.debit_amount = 0.0) then NUll else 
+        cast (m.invoice_date as text) end as "AGAINST INVOICE DATE", 
+case when (b.credit_amount = 0.0  and b.debit_amount = 0.0) then NUll else 
+        /*case when e.exempted = False then 
+                e.tax_rate 
+        end*/ e.tax_rate end as "TAX RATE",
+ case when (b.credit_amount = 0.0  and b.debit_amount = 0.0) then NUll else 
+        case 
+           when e.service_classification='residential' then 'Residential Service' 
+           when e.service_classification='commercial' then 'Commercial Service' 
+           when e.service_classification='port' then 'Port Service' 
+           when e.service_classification='airport' then 'Airport Service' 
+           when e.service_classification='exempted' then 'Exempted' 
+        else '' 
+           end end as "AGAINST SERVICE CLASSIFICATION", 
+case when (b.credit_amount = 0.0  and b.debit_amount = 0.0) then NUll else 
+        (select concat_ws(' ',rr.name,he.last_name) from resource_resource rr join hr_employee he 
+on rr.id=he.resource_id where he.id=e.cse) end as "AGAINST CSE NAME", 
+case when (b.credit_amount = 0.0  and b.debit_amount = 0.0) then NUll else 
+        (select r.name from res_users r where r.id=e.cce) end as "AGAINST CCE", 
+case when (b.credit_amount = 0.0  and b.debit_amount = 0.0) then NUll else 
+        cast (e.invoice_due_date as text) end as "AGAINST INVOICE DUE DATE",
+
+case when (b.credit_amount = 0.0  and b.debit_amount = 0.0) then NUll else
+        case when (b.credit_amount = 0.0  and b.debit_amount = 0.0) then 0.0 else
+case when e.id is not null then 
+        case 
+        when b.type='credit' and i.ref_amount <> 0.0 and (select count(*) from advance_invoice_line where advance_invoice_line_id=b.id)<1 then i.ref_amount
+        when b.type='credit' and irh.invoice_paid_amount>0 then irh.invoice_paid_amount  
+        when b.type='credit' and g.ref_amount>0 then g.ref_amount
+        when b.type='credit' and h.ref_amount > 0 then h.ref_amount
+        when b.type='credit' and j.ref_amount > 0 then j.ref_amount
+        when b.type='credit' and k.payment_amount >0  then  k.payment_amount
+        when b.type='credit' and m.invoice_amount >0  then case when (m.partial_payment_amount = 0.0 or m.partial_payment_amount is null) then m.invoice_amount else m.partial_payment_amount end 
+        when b.type='credit' and n.credit_amount_srch > 0 then n.credit_amount_srch
+        when b.type='credit' and o.neft_amount  > 0 then o.neft_amount
+        when b.type='credit' then b.credit_amount
+        end end end end as "AGAINST GRAND TOTAL",
+case when (b.credit_amount = 0.0  and b.debit_amount = 0.0) then NUll else 
+        c.cheque_no end as "BANK ONE CHEQUE NO",
+case when (b.credit_amount = 0.0  and b.debit_amount = 0.0) then NUll else 
+        cast (c.cheque_date as text) end  as "BANK ONE CHEQUE DATE",
+case when (b.credit_amount = 0.0  and b.debit_amount = 0.0) then 0.0 else 
+        c.cheque_amount end as "CHEQUE AMOUNT",
+case when (b.credit_amount = 0.0  and b.debit_amount = 0.0) then NUll else 
+        cast(c.bank_reco_date as text) end as "Bank Reco Date",
+case when (b.credit_amount = 0.0  and b.debit_amount = 0.0) then NUll else  
+        (SELECT name FROM bank_name a where a.id=c.drawee_bank_name) end as "DRAWEE ONE NAME",
+case when (b.credit_amount = 0.0  and b.debit_amount = 0.0) then NUll else 
+        c.bank_branch_name end as "BANK BRANCH NAME",  
+case when (b.credit_amount = 0.0  and b.debit_amount = 0.0) then NUll else 
+        o.beneficiary_bank_name end  as "NEFT BENEFICIARY  BANK NAME", 
+case when (b.credit_amount = 0.0  and b.debit_amount = 0.0) then NUll else 
+        o.branch_name  end as "NEFT BRANCH NAME", 
+case when (b.credit_amount = 0.0  and b.debit_amount = 0.0) then NUll else 
+        o.pay_ref_no  end as "NEFT PAYMENT REFERENCE NUMBER", 
+case when (b.credit_amount = 0.0  and b.debit_amount = 0.0) then NUll else 
+        cast (o.neft_date as text)  end as "NEFT DATE", 
+case when (b.credit_amount = 0.0  and b.debit_amount = 0.0) then 0.0 else 
+        o.neft_amount end as "NEFT AMOUNT",
+case when (b.credit_amount = 0.0  and b.debit_amount = 0.0) then NUll else 
+        dd.dd_no end as "DD Number",
+case when (b.credit_amount = 0.0  and b.debit_amount = 0.0) then NUll else 
+        cast (dd.dd_date as text) end as "DD Date",
+case when (b.credit_amount = 0.0  and b.debit_amount = 0.0) then NUll else 
+        dd.demand_draft_drawee_bank_name end as "Drawee Bank Name", 
+case when (b.credit_amount = 0.0  and b.debit_amount = 0.0) then NUll else 
+        dd.dd_bank_branch_name end as "Bank Branch Name",
+case when (b.credit_amount = 0.0  and b.debit_amount = 0.0) then NUll else 
+        dd.demand_draft_check_drawn_name end as "DD Drawn Name",
+case when (b.credit_amount = 0.0  and b.debit_amount = 0.0) then NUll else 
+        dd.dd_amount end as "DD AMOUNT",
+case when (b.credit_amount = 0.0  and b.debit_amount = 0.0) then NUll else 
+        (select concat_ws(' ',rr.name,he.last_name) from resource_resource rr join hr_employee he 
+on rr.id=he.resource_id where he.id=g.cse) end  as "SECURITY CSE", 
+case when (b.credit_amount = 0.0  and b.debit_amount = 0.0) then NUll else 
+        g.ref_no end as "SECURITY REFERENCE NO",
+case when (b.credit_amount = 0.0  and b.debit_amount = 0.0) then NUll else 
+        cast(g.ref_date as text) end as "SECURITY REFERENCE DATE",
+case when (b.credit_amount = 0.0  and b.debit_amount = 0.0) then 0.0 else 
+        g.ref_amount end as "SECURITY REFERENCE AMOUNT",
+case when (b.credit_amount = 0.0  and b.debit_amount = 0.0) then NUll else  
+        (select concat_ws(' ',rr.name,he.last_name) from resource_resource rr join hr_employee he 
+on rr.id=he.resource_id where he.id=h.cse) end as "SECURITY NEW CSE", 
+case when (b.credit_amount = 0.0  and b.debit_amount = 0.0) then NUll else 
+         h.ref_no end as "SECURITY NEW REFERENCE NO",
+case when (b.credit_amount = 0.0  and b.debit_amount = 0.0) then NUll else 
+         cast(h.ref_date as text) end as "SECURITY NEW REFERENCE DATE",
+case when (b.credit_amount = 0.0  and b.debit_amount = 0.0) then 0.0 else 
+         h.ref_amount end as "SECURITY NEW REFERENCE AMOUNT",
+         
+case when (b.credit_amount = 0.0  and b.debit_amount = 0.0) then NUll else case when (select count(*) from advance_invoice_line where advance_invoice_line_id=b.id)> 0 then null  else  
+      case when i.cse is null and (select name from account_account where id=b.account_id) ilike '%Advance Receipt%' then (select concat_ws(' ',rr.name,he.last_name) from resource_resource rr join hr_employee he 
+on rr.id=he.resource_id where he.id= (select cse from invoice_receipt_history where receipt_id_history=( select id from account_sales_receipts_line where account_id in (select id from account_account where account_selection='against_ref') and receipt_id=a.id) limit 1 )) else (select concat_ws(' ',rr.name,he.last_name) from resource_resource rr join hr_employee he 
+on rr.id=he.resource_id where he.id=i.cse) 
+	end end end as "ADVANCE CSE",
+	
+case when (b.credit_amount = 0.0  and b.debit_amount = 0.0) then NUll else  case when (select count(*) from advance_invoice_line where advance_invoice_line_id=b.id)> 0 then null  else  
+       i.receipt_no end end as "ADVANCE REFERENCE NO",
+        
+case when (b.credit_amount = 0.0  and b.debit_amount = 0.0) then NUll else case when (select count(*) from advance_invoice_line where advance_invoice_line_id=b.id)> 0 then null  else  
+        case when i.ref_date is null and (select name from account_account where id=b.account_id) ilike '%Advance Receipt%' then a.receipt_date else i.ref_date 
+        end end end as "ADVANCE REFERENCE DATE",
+        
+case when (b.credit_amount = 0.0  and b.debit_amount = 0.0) then 0.0 else case when (select count(*) from advance_invoice_line where advance_invoice_line_id=b.id)> 0 then null  else  
+       case when i.ref_amount is null and (select name from account_account where id=b.account_id) ilike '%Advance Receipt%' then b.credit_amount else i.ref_amount
+       end end end as "ADVANCE REFERENCE AMOUNT", 
+       
+case when (b.credit_amount = 0.0  and b.debit_amount = 0.0) then null else  case when (select count(*) from advance_invoice_line where advance_invoice_line_id=b.id)> 0 then null  else  
+        case                                            /* New Column Added*/ 
+           when b.acc_status='advance' and (select name from account_account where id=b.account_id) ilike '%15.0%' then '15.0'  
+           when b.acc_status='advance' and (select name from account_account where id=b.account_id) ilike '%14.5%' then '14.5' 
+           when b.acc_status='advance' and (select name from account_account where id=b.account_id) ilike '%14.0%' then '14.0' 
+           when b.acc_status='advance' and (select name from account_account where id=b.account_id) ilike '%12.36%' then '12.36' 
+           when b.acc_status='advance' and (select name from account_account where id=b.account_id) ilike '%12.24%' then '12.24' 
+           when b.acc_status='advance' and (select name from account_account where id=b.account_id) ilike '%10.30%' then '10.30'
+           when b.acc_status='advance' and (select name from account_account where id=b.account_id) ilike '%others%' then 'other'
+        else null 
+           end  end end as "ADVANCE TAX RATE",  
+           
+case when (b.credit_amount = 0.0  and b.debit_amount = 0.0) then NULL else case when (select count(*) from advance_invoice_line where advance_invoice_line_id=b.id)> 0 then null  else  
+        case 
+           when i.service_classification='residential' then 'Residential Service' 
+           when i.service_classification='commercial' then 'Commercial Service' 
+           when i.service_classification='port' then 'Port Service' 
+           when i.service_classification='airport' then 'Airport Service' 
+           when i.service_classification='exempted' then 'Exempted' 
+           
+        else 
+          case when i.service_classification is null and (select name from account_account where id=b.account_id) ilike '%Advance Receipt%' then 
+		case when (select service_classification from invoice_receipt_history where receipt_id_history=( select id from account_sales_receipts_line where account_id in (select id from account_account where account_selection='against_ref') and receipt_id=a.id) limit 1 )='residential' then 'Residential Service'
+		when (select service_classification from invoice_receipt_history where receipt_id_history=( select id from account_sales_receipts_line where account_id in (select id from account_account where account_selection='against_ref') and receipt_id=a.id) limit 1 )='commercial' then 'Commercial Service'
+		when (select service_classification from invoice_receipt_history where receipt_id_history=( select id from account_sales_receipts_line where account_id in (select id from account_account where account_selection='against_ref') and receipt_id=a.id) limit 1 )='port' then 'Port Service'
+		when (select service_classification from invoice_receipt_history where receipt_id_history=( select id from account_sales_receipts_line where account_id in (select id from account_account where account_selection='against_ref') and receipt_id=a.id) limit 1 )='airport' then 'Airport Service' 
+		when (select service_classification from invoice_receipt_history where receipt_id_history=( select id from account_sales_receipts_line where account_id in (select id from account_account where account_selection='against_ref') and receipt_id=a.id) limit 1 )='exempted' then 'Exempted' 
+           else '' end end 
+           end end end as "ADVANCE SERVICE CLASSIFICATION", /* New Column Added*/ 
+                 
+case when (b.credit_amount = 0.0  and b.debit_amount = 0.0) then NUll else 
+        (select concat_ws(' ',rr.name,he.last_name) from resource_resource rr join hr_employee he 
+on rr.id=he.resource_id where he.id=k.cse) end as "SUNDRY CSE", 
+case when (b.credit_amount = 0.0  and b.debit_amount = 0.0) then NUll else 
+         K.payment_no end as "SUNDRY PAYMENT NO",
+case when (b.credit_amount = 0.0  and b.debit_amount = 0.0) then NUll else 
+         cast(k.payment_date as text) end as "SUNDRY PAYMENT DATE",
+case when (b.credit_amount = 0.0  and b.debit_amount = 0.0) then 0.0 else 
+         k.payment_amount end as "SUNDRY PAYMENT AMOUNT",  
+case when (b.credit_amount = 0.0  and b.debit_amount = 0.0) then NUll else 
+        /*cast(n.debit_note_no as text) */ null end  as "DEBIT NOTE NO", 
+case when (b.credit_amount = 0.0  and b.debit_amount = 0.0) then 0.0 else 
+        /*n.credit_amount_srch*/ null  end as "DEBIT NOTE CREDIT AMOUNT SRCH" 
+        
+        from account_sales_receipts a 
+        LEFT JOIN account_sales_receipts_line b ON a.id=b.receipt_id 
+        LEFT JOIN iob_one_sales_receipts c ON b.id=c.iob_one_id 
+        LEFT JOIN demand_draft_sales_receipts dd ON b.id=dd.demand_draft_id 
+        LEFT JOIN invoice_adhoc_master d ON b.id=d.invoice_id_receipt and d.check_invoice=True 
+        LEFT JOIN invoice_adhoc_master e ON b.id=e.invoice_id_receipt_advance and e.check_advance_ref_invoice=True 
+        LEFT JOIN security_deposit g on b.id = g.security_id 
+        LEFT JOIN security_deposit_history h on b.id = h.receipt_id 
+        LEFT JOIN advance_sales_receipts i on b.id = i.advance_id 
+        LEFT JOIN advance_sales_receipts j on b.id = j.advance_ref_id and j.check_advance_against_ref= True 
+        LEFT JOIN sundry_deposit k on b.id = k.sundry_id and k.sundry_check= True 
+        LEFT JOIN advance_invoice_line m ON b.id=m.advance_invoice_line_id 
+        LEFT JOIN debit_note n ON b.id=n.sales_debit_id and n.check_debit= True 
+        LEFT JOIN neft_sales_receipts o ON b.id=o.neft_id 
+        LEFT JOIN invoice_adhoc_master p ON b.id=p.cfob_invoice_id and p.cfob_chk_invoice=True 
+        LEFT JOIN invoice_receipt_history irh ON b.id = irh.receipt_id_history and irh.check_invoice = True 
+where a.state!='draft' and  
+a.receipt_date between '2016-11-01' and '2016-12-25'
+   -- a.receipt_no='P119SR17000801' 
+    --  a.receipt_date between '2016-01-01' and '2016-01-02'
+        and (a.customer_name<>(select id from res_partner where name='CFOB') or a.customer_name is null)
+
+union all
+
+SELECT distinct a.payment_status as "Payment Status",
+case when (b.credit_amount = 0.0  and b.debit_amount = 0.0) then NUll else  
+        case when (select aa.account_selection from account_account aa where aa.id=b.account_id) = 'against_ref' or 
+        (select aa.account_selection from account_account aa where aa.id=b.account_id) = 'advance' or b.type = 'credit' then 
+    (select r.ou_id from res_partner r where r.id=a.customer_name)  
+        end end as "CUSTOMER ID",
+False as "CFOB CHECK", 
+case when (b.credit_amount = 0.0  and b.debit_amount = 0.0) then NUll else 
+        (select rp.name from res_partner rp where rp.id=b.customer_name) end as "CUSTOMER NAME",
+a.receipt_date as "DATE",
+a.receipt_no as "RECEIPT NUMBER",
+a.voucher_type as "VOUCHER TYPE",
+a.narration as "NARRATION",
+0.0 as "DEBIT AMOUNT",
+
+
+case when (select count(id) from debit_note n where n.sales_debit_id=b.id limit 1) > 0  then 
+(select credit_amount_srch from debit_note n where n.sales_debit_id=b.id limit 1)
+else 
+(select sum(ref_amount) from advance_sales_receipts where advance_id=b.id limit 1)-
+(select sum(amount) from (select sum(invoice_amount) as amount from advance_invoice_line  where advance_invoice_line_id=b.id and (partial_payment_amount = 0.0 or partial_payment_amount is null)
+ union all select sum(partial_payment_amount) as amount from advance_invoice_line  where advance_invoice_line_id=b.id and partial_payment_amount > 0.0)total)
+  end as "CREDIT AMOUNT",
+(select t.account_selection from account_account t where t.id=b.account_id ) as "ACCOUNT STATUS",
+(select t.name from account_account t where t.id=b.account_id ) as "ACCOUNT NAME", 
+        
+null as "INVOICE NUMBER",
+null as "INVOICE DATE",
+null as "SERVICE TAX",
+
+null as "SERVICE CLASSIFICATION", 
+null as "CSE NAME",
+null as "CCE",
+ case when (select count(id) from debit_note n where n.sales_debit_id=b.id limit 1) > 0  then 
+(select credit_amount_srch from debit_note n where n.sales_debit_id=b.id limit 1)
+else 
+ (select sum(ref_amount) from advance_sales_receipts where advance_id=b.id limit 1)-
+(select sum(amount) from (select sum(invoice_amount) as amount from advance_invoice_line  where advance_invoice_line_id=b.id and (partial_payment_amount = 0.0 or partial_payment_amount is null)
+ union all select sum(partial_payment_amount) as amount from advance_invoice_line  where advance_invoice_line_id=b.id and partial_payment_amount > 0.0)total) end as "Grand Total",
+null as "AGAINST INVOICE NUMBER",
+null as "AGAINST INVOICE DATE",
+null as "TAX RATE",
+null as "AGAINST SERVICE CLASSIFICATION", 
+null as "AGAINST CSE NAME", 
+null as "AGAINST CCE",
+null as "AGAINST INVOICE DUE DATE",
+0.0 as "AGAINST GRAND TOTAL",
+null as "BANK ONE CHEQUE NO",
+null as "BANK ONE CHEQUE DATE",
+0.0 as "CHEQUE AMOUNT",
+null as "Bank Reco Date",
+null as "DRAWEE ONE NAME",
+null as "BANK BRANCH NAME",  
+null as "NEFT BENEFICIARY  BANK NAME", 
+null as "NEFT BRANCH NAME", 
+null as "NEFT PAYMENT REFERENCE NUMBER",
+null as "NEFT DATE", 
+0.0 as "NEFT AMOUNT",
+null as "DD Number",
+null as "DD Date",
+0.0 as "Drawee Bank Name", 
+null as "Bank Branch Name",
+null as "DD Drawn Name",
+0.0 as "DD AMOUNT",
+null as "SECURITY CSE", 
+null as "SECURITY REFERENCE NO",
+null as "SECURITY REFERENCE DATE",
+0.0 as "SECURITY REFERENCE AMOUNT",
+null as "SECURITY NEW CSE", 
+null as "SECURITY NEW REFERENCE NO",
+null as "SECURITY NEW REFERENCE DATE",
+0.0 as "SECURITY NEW REFERENCE AMOUNT",
+
+(select concat_ws(' ',rr.name,he.last_name) from resource_resource rr join hr_employee he 
+on rr.id=he.resource_id where he.id=i.cse) as "ADVANCE CSE",
+
+i.receipt_no as "ADVANCE REFERENCE NO",
+i.ref_date as "ADVANCE REFERENCE DATE",
+(select sum(ref_amount) from advance_sales_receipts where advance_id=b.id)-
+(select sum(amount) from (select sum(invoice_amount) as amount from advance_invoice_line  where advance_invoice_line_id=b.id and (partial_payment_amount = 0.0 or partial_payment_amount is null)
+ union all select sum(partial_payment_amount) as amount from advance_invoice_line  where advance_invoice_line_id=b.id and partial_payment_amount > 0.0 )total)
+as "ADVANCE REFERENCE AMOUNT", 
+
+case                                              
+	   when b.acc_status='advance' and (select name from account_account where id=b.account_id) ilike '%15.0%' then '15.0'
+           when b.acc_status='advance' and (select name from account_account where id=b.account_id) ilike '%14.5%' then '14.5' 
+           when b.acc_status='advance' and (select name from account_account where id=b.account_id) ilike '%14.0%' then '14.0' 
+           when b.acc_status='advance' and (select name from account_account where id=b.account_id) ilike '%12.36%' then '12.36' 
+           when b.acc_status='advance' and (select name from account_account where id=b.account_id) ilike '%12.24%' then '12.24' 
+           when b.acc_status='advance' and (select name from account_account where id=b.account_id) ilike '%10.30%' then '10.30'
+           when b.acc_status='advance' and (select name from account_account where id=b.account_id) ilike '%others%' then 'other' end as "ADVANCE TAX RATE",
+             
+case 
+   when i.service_classification='residential' then 'Residential Service' 
+   when i.service_classification='commercial' then 'Commercial Service' 
+   when i.service_classification='port' then 'Port Service' 
+   when i.service_classification='airport' then 'Airport Service' 
+   when i.service_classification='exempted' then 'Exempted'  
+ end as "ADVANCE SERVICE CLASSIFICATION",  
+null as "SUNDRY CSE", 
+null as "SUNDRY PAYMENT NO",
+null as "SUNDRY PAYMENT DATE",
+0.0 as "SUNDRY PAYMENT AMOUNT",
+case when (select count(id) from debit_note n where n.sales_debit_id=b.id limit 1) > 0  then 
+(select debit_note_no from debit_note n where n.sales_debit_id=b.id limit 1)
+else null end as "DEBIT NOTE NO",
+case when (select count(id) from debit_note n where n.sales_debit_id=b.id limit 1) > 0  then 
+(select credit_amount_srch from debit_note n where n.sales_debit_id=b.id limit 1)
+else  0.0 end as "DEBIT NOTE CREDIT AMOUNT SRCH"
+        
+        from account_sales_receipts a 
+        LEFT JOIN account_sales_receipts_line b ON a.id=b.receipt_id 
+        LEFT JOIN iob_one_sales_receipts c ON b.id=c.iob_one_id 
+        LEFT JOIN demand_draft_sales_receipts dd ON b.id=dd.demand_draft_id 
+        LEFT JOIN invoice_adhoc_master d ON b.id=d.invoice_id_receipt and d.check_invoice=True 
+        LEFT JOIN invoice_adhoc_master e ON b.id=e.invoice_id_receipt_advance and e.check_advance_ref_invoice=True 
+        LEFT JOIN security_deposit g on b.id = g.security_id 
+        LEFT JOIN security_deposit_history h on b.id = h.receipt_id 
+        LEFT JOIN advance_sales_receipts i on b.id = i.advance_id 
+        LEFT JOIN advance_sales_receipts j on b.id = j.advance_ref_id and j.check_advance_against_ref= True 
+        LEFT JOIN sundry_deposit k on b.id = k.sundry_id and k.sundry_check= True 
+        LEFT JOIN advance_invoice_line m ON b.id=m.advance_invoice_line_id 
+        LEFT JOIN debit_note n ON b.id=n.sales_debit_id and n.check_debit= True 
+        LEFT JOIN neft_sales_receipts o ON b.id=o.neft_id 
+        LEFT JOIN invoice_adhoc_master p ON b.id=p.cfob_invoice_id and p.cfob_chk_invoice=True 
+        LEFT JOIN invoice_receipt_history irh ON b.id = irh.receipt_id_history and irh.check_invoice = True 
+where a.state!='draft' and ( ((select sum(ref_amount) from advance_sales_receipts where advance_id=b.id)-
+(select sum(amount) from (select sum(ail.invoice_amount) as amount from advance_invoice_line ail where ail.advance_invoice_line_id=b.id and (partial_payment_amount = 0.0 or partial_payment_amount is null)
+ union all select sum(partial_payment_amount) as amount from advance_invoice_line  where advance_invoice_line_id=b.id and partial_payment_amount > 0.0 )total))>0 or ((select count(id) from debit_note n where n.sales_debit_id=b.id) > 0 )) and  
+a.receipt_date between '2016-11-01' and '2016-12-25'
+    -- a.receipt_no='P119SR17000801' 
+     -- a.receipt_date between '2016-01-01' and '2016-01-02'
+         and a.customer_name<>(select id from res_partner where name='CFOB'))tt
+         -- where tt."Payment Status" is not null
+group by
+tt."Payment Status",tt."CUSTOMER ID",tt."CFOB CHECK",tt."CUSTOMER NAME",tt."DATE",tt."RECEIPT NUMBER",tt."VOUCHER TYPE",tt."NARRATION",tt."DEBIT AMOUNT",
+tt."CREDIT AMOUNT",tt."ACCOUNT STATUS",tt."ACCOUNT NAME",tt."INVOICE NUMBER",cast(tt."INVOICE DATE" as date),tt."SERVICE TAX",tt."SERVICE CLASSIFICATION",
+tt."CSE NAME",tt."CCE",tt."Grand Total",tt."AGAINST INVOICE NUMBER",cast(tt."AGAINST INVOICE DATE" as date),tt."TAX RATE",tt."AGAINST SERVICE CLASSIFICATION",
+tt."AGAINST CSE NAME",tt."AGAINST CCE",tt."AGAINST GRAND TOTAL",tt."BANK ONE CHEQUE NO",cast (tt."BANK ONE CHEQUE DATE" as date),tt."CHEQUE AMOUNT",
+cast(tt."Bank Reco Date" as date),tt."DRAWEE ONE NAME",tt."BANK BRANCH NAME",  "NEFT BENEFICIARY  BANK NAME", "NEFT BRANCH NAME",
+ "NEFT PAYMENT REFERENCE NUMBER",cast ("NEFT DATE" as date), "NEFT AMOUNT",tt."DD Number",cast(tt."DD Date"as date),cast(tt."Drawee Bank Name" as text),
+ "Bank Branch Name",tt."DD Drawn Name",tt."DD AMOUNT",tt."SECURITY CSE", "SECURITY REFERENCE NO",cast(tt."SECURITY REFERENCE DATE" as Date),
+ tt."SECURITY REFERENCE AMOUNT",tt."SECURITY NEW CSE", "SECURITY NEW REFERENCE NO",cast(tt."SECURITY NEW REFERENCE DATE"as date),
+ tt."SECURITY NEW REFERENCE AMOUNT",tt."ADVANCE CSE",tt."ADVANCE REFERENCE NO",cast(tt."ADVANCE REFERENCE DATE" as date),tt."ADVANCE REFERENCE AMOUNT",
+ "ADVANCE TAX RATE",tt."ADVANCE SERVICE CLASSIFICATION",  "SUNDRY CSE", "SUNDRY PAYMENT NO",cast(tt."SUNDRY PAYMENT DATE" as date),
+ tt."SUNDRY PAYMENT AMOUNT",tt."DEBIT NOTE NO",tt."DEBIT NOTE CREDIT AMOUNT SRCH"
+    
+        order by tt."RECEIPT NUMBER",tt."INVOICE NUMBER"

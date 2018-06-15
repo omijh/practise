@@ -1,0 +1,100 @@
+{% extends "userapp/base_site.html" %}
+
+{% block title %} Export Payment Request {% endblock title %}
+
+{% block content %}
+
+<div class="right_col" role="main">
+	<div class="">
+		</div>
+		<div class="clearfix"></div>
+
+		<div class="row">
+			<div class="col-md-12 col-sm-12 col-xs-12">
+				<div class="x_panel">
+					<div class="x_content">
+
+						<form class="form-group form-label-left" method="POST"   enctype="multipart/form-data" action="{% url 'upload_ack' %}" id="paymentUploadForm" novalidate>{% csrf_token %}
+
+							<span class="section">Upload Payment Request</span>
+							<div class="item form-group col-md-6 col-sm-12 col-xs-12">
+								<label class="control-label col-md-4 col-sm-3 col-xs-12" for="csv_doc">Upload CSV<span class="required">*</span>
+								</label>
+								<div class="col-md-6 col-sm-6 col-xs-12">
+									<input type="file" id="csv_doc" name="csv_doc"  class="form-control col-md-7 col-xs-12" required="required">
+								</div>
+							</div>
+							<div class="item form-group col-md-6 col-sm-12 col-xs-12 ">
+									<div class="col-md-12 col-sm-12 col-xs-12 ">
+							           <button type="submit" class="btn btn-primary pull-right" form="paymentUploadForm"> Submit </button>
+										<button type="reset" class="btn btn-default pull-right">Reset</button>
+									</div>
+								</div>
+							 {% if message == 'FormatError' %}
+							<div class="modal fade" id = "onload2" tabindex="-1" role="dialog" aria-hidden="true">
+							     <div class="modal-dialog modal-sm">
+							       <div class="modal-content">
+
+							         <div class="modal-header">
+							           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
+							           </button>
+							           <h4 class="modal-title" id="myModalLabe">Validation Error </h4>
+							         </div>
+							         <div class="modal-body">
+
+							           <p>Please Verify The File Format</p>
+							          
+							         </div>
+							         <div class="modal-footer">
+							           <button type="button" type="reset" class="btn btn-default" data-dismiss="modal">
+							           Ok </button>
+							         </div>
+							       </div>
+							     </div>
+							     {% endif %}
+							 {% if messageids %}
+							<div class="modal fade" id = "onload1" tabindex="-1" role="dialog" aria-hidden="true">
+							     <div class="modal-dialog modal-sm">
+							       <div class="modal-content">
+
+							         <div class="modal-header">
+							           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
+							           </button>
+							           <h4 class="modal-title" id="myModalLabe">Value Error </h4>
+							         </div>
+							         <div class="modal-body">
+
+							           <p>The following requests either miss processed date or status, or have already been processed</p>
+							          	<p>{{ messageids }}</p>
+							         </div>
+							         <div class="modal-footer">
+							           <button type="button" type="reset" class="btn btn-default" data-dismiss="modal">
+							           Ok </button>
+							         </div>
+							       </div>
+							     </div>
+							     {% endif %}
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<script type="text/javascript">
+	$(document).ready(function() {
+            $('#onload2').modal('show');
+            $('#onload1').modal('show');
+
+});
+</script>
+
+{% endblock content %}
+
+{% block javascripts %}
+	{{ block.super }}
+	<!-- validator -->
+	<script src="/static/vendors/validator/validator.js"></script>
+	
+{% endblock javascripts %}

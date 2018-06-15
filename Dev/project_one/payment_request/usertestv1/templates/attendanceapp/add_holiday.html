@@ -1,0 +1,117 @@
+<!-- template to show all employee records -->
+{% extends "userapp/base_site.html" %}
+{% block title %} Form Validation {% endblock title %}
+{% block content %}
+<div class="right_col" role="main">
+   <div class="">
+      <div class="page-title">
+         <div class="title_left">
+            <h3>Holiday Data</h3>
+         </div>
+      </div>
+      <div class="clearfix"></div>
+      <div class="row">
+         <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="x_panel">
+               <div class="x_content">
+                  <form class="form-horizontal form-label-left" method="POST" action="{% url 'submit_new_holiday' %}"   novalidate>
+                     {% csrf_token %}
+                     <span class="section">Add State Holiday :</span>
+                     <div class="row">
+                        <div class="item form-group col-md-4 col-xs-12">
+                           <label class="control-label col-md-4 col-sm-3 col-xs-12">Holiday:
+                           </label>
+                           <div class="col-md-8 col-sm-6 col-xs-12">
+                              <input class="form-control" name='hol_name' type="text" required ></input>
+                           </div>
+                        </div>
+                        <div class="item form-group col-md-4 col-xs-12">
+                           <label class="control-label col-md-4 col-sm-3 col-xs-12">Holiday Type:
+                           </label>
+                           <div class="col-md-8 col-sm-6 col-xs-12">
+                              <select class="form-control col-md-7 col-xs-12" name="holiday_type" id="holiday_type"  required>
+                                 {% for type in holiday_type %}
+                                 <option value="{{ type.id }}">{{ type.holiday_type }}</option>
+                                 {% endfor %}
+                              </select>
+                           </div>
+                        </div>
+                        <div class="item form-group col-md-4 col-xs-12">
+                           <label class="control-label col-md-4 col-sm-3 col-xs-12">Holiday Date:
+                           </label>
+                           <div class="col-md-8 col-sm-6 col-xs-12">
+                              <input class="form-control" name='hol_date' type="Date"></input>
+                           </div>
+                        </div>
+                     </div>
+                     <div class="row">
+                        <div class="item form-group col-md-4 col-xs-12">
+                           <label class="control-label col-md-4 col-sm-3 col-xs-12">Day:
+                           </label>
+                           <div class="col-md-8 col-sm-6 col-xs-12">
+                              <input class="form-control" name='hol_day' type="text"></input>
+                           </div>
+                        </div>
+                        <div class="item form-group col-md-4 col-xs-12">
+                           <label class="control-label col-md-4 col-sm-3 col-xs-12">State:
+                           </label>
+                           <div class="col-md-8 col-sm-6 col-xs-12">
+                              <select class="form-control col-md-7 col-xs-12" name="state" id="state"  required>
+                                 {% for state in states %}
+                                 <option value="{{ state.id }}">{{ state.state_name }}</option>
+                                 {% endfor %}
+                              </select>
+                           </div>
+                        </div>
+                        <div class="item form-group col-md-4 col-xs-12">
+                           <label class="control-label col-md-4 col-sm-3 col-xs-12">Region:
+                           </label>
+                           <div class="col-md-8 col-sm-6 col-xs-12">
+                              <input class="form-control" name='region' type="text"></input>
+                           </div>
+                        </div>
+                     </div>
+                     <div class="row">
+                        <div class="item form-group col-md-4 col-xs-12">
+                           <label class="control-label col-md-4 col-sm-3 col-xs-12">Coverage(Multiple Opt):
+                           </label>
+                           <div class="col-md-8 col-sm-6 col-xs-12">
+                              <select multiple class="form-control col-md-7 col-xs-12" name="coverage" id="coverage"  required>
+                                 <option>All Branch</option>
+                                 {% for coverage in coverages %}
+                                 <option value="{{ coverage.id }}">{{ coverage.coverage }}</option>
+                                 {% endfor %}
+                              </select>
+                           </div>
+                        </div>
+                        <div class="item form-group col-md-4 col-xs-12">
+                           <label class="control-label col-md-4 col-sm-3 col-xs-12">Assigned By:
+                           </label>
+                           <div class="col-md-8 col-sm-6 col-xs-12">
+                              <input class="form-control" name='assigned_by' type="text"></input>
+                           </div>
+                        </div>
+                     </div>
+                     <div class="row">
+                        <span>&nbsp;</span>
+                        <span class="section">&nbsp;</span>
+                        <div class="form-group ">
+                           <div class="col-md-6 col-md-offset-6">
+                              <button id="send" type="submit" class="btn btn-success pull-right">Add Holiday in Database</button>
+                              <button type="reset" class="btn btn-default pull-right">Cancel</button>
+                           </div>
+                        </div>
+                     </div>
+                  </form>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+{% endblock content %}
+{% block javascripts %}
+{{ block.super }}
+<!-- validator -->
+<script src="/static/vendors/validator/validator.js"></script>
+{% endblock javascripts %}

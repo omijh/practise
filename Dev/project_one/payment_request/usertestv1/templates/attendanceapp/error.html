@@ -1,0 +1,24 @@
+
+
+<html>
+   <body>
+     
+      <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+      <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+      <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+      <div class="container">
+         <div class="row text-center">
+            <div class="col-sm-6 col-sm-offset-3">
+               <br><br>
+               <img width="25%" height="20%" src="/static/images/error.png">
+               <br>
+               <h1 style="color:#0fad00">Oops!!!</h1>
+               <h3>{{ msg }}</h3>
+               <a href="{% url 'error_go_back' %}" id="goback" name="goback" class="btn btn-success ">Go Back</a>
+               <br><br>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>
+

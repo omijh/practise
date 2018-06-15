@@ -1,0 +1,203 @@
+
+
+<!-- template to show all employee records -->
+{% extends "userapp/base_site.html" %}
+{% block title %} Table Dynamic {% endblock title %}
+{% block stylesheets %}
+{{ block.super }}
+<link href="/static/vendors/datatables.net-bs/css/dataTables.bootstrap.min.css" rel="stylesheet">
+<link href="/static/vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css" rel="stylesheet">
+<link href="/static/vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css" rel="stylesheet">
+<link href="/static/vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css" rel="stylesheet">
+<link href="/static/vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css" rel="stylesheet">
+{% endblock stylesheets %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+{% block content %}
+<div class="right_col" role="main">
+<div class="">
+<div class="page-title">
+   <div class="clearfix"></div>
+   <div class="row">
+      <div class="col-md-12 col-sm-12 col-xs-12">
+         <div class="x_panel">
+            <h2>Search</h2>
+            <div class="col-md-12 col-xs-12">
+               <div class="x_panel">
+                  <div class="x_content">
+                     <br />
+                     <form class="form-horizontal form-label-left input_mask" method="POST" action="{% url 'leave_index' %}">
+                        {% csrf_token %}
+                        <div class="row">
+                           <div class="row">
+                              <div class="col-md-4 col-xs-12">
+                                 <div class="form-group">
+                                    <label class="control-label col-md-4 col-sm-4 col-xs-12">Branch</label>
+                                    <div class="col-md-8 col-sm-8 col-xs-12">
+                                       <select class="form-control" id="leave_branch" required name="leave_branch">
+                                          <option   selected value >None</option>
+                                          {% if branch_list.all %}
+                                          {% for branch in branch_list %}
+                                          <option value="{{ branch.id }}">{{ branch.br_name }}</option>
+                                          {% endfor %}
+                                          {% else %}
+                                          <option value="">None</option>
+                                          {% endif %}
+                                       </select>
+                                    </div>
+                                 </div>
+                              </div>
+                              <div class="col-md-4 col-xs-12">
+                                 <div class="form-group">
+                                    <label class="control-label col-md-4 col-sm-4 col-xs-12">Date From</label>
+                                    <div class="col-md-8 col-sm-8 col-xs-12">
+                                       <input type="Date" class="form-control" required 
+                                          id="date_from_id" name="date_from">
+                                    </div>
+                                 </div>
+                              </div>
+                              <div class="col-md-4 col-xs-12">
+                                 <div class="form-group">
+                                    <label class="control-label col-md-4 col-sm-4 col-xs-12">Date Till</label>
+                                    <div class="col-md-8 col-sm-8 col-xs-12">
+                                       <input type="Date" class="form-control" id="date_till_id" required name="date_to" >
+                                    </div>
+                                 </div>
+                              </div>
+                              <script>
+                                 var today = new Date();
+                                 var dd = today.getDate();
+                                 var mm = today.getMonth()+1; //January is 0!
+                                 var yyyy = today.getFullYear();
+                                 var p_mm = today.getMonth()+1; 
+                                 var min_mm = p_mm - 3
+                                 
+                                 if(dd<10){
+                                         dd='0'+dd
+                                     } 
+                                     if(mm<10){
+                                         mm='0'+mm
+                                     } 
+                                 
+                                 today = yyyy+'-'+mm+'-'+dd;
+                                 min_date = yyyy+'-'+min_mm+'-'+dd;
+                                 alert(today);
+                                 alert(min_date);
+                                 document.getElementById("date_till_id").setAttribute("max", today);
+                                 document.getElementById("date_till_id").setAttribute("min", min_date);
+                              </script>
+                           </div>
+                           &nbsp;
+                           <div class="form-group">
+                              <div class="col-md-9 col-sm-9 col-xs-12 col-md-offset-3">  
+                                 <button type="submit" class="btn btn-success pull-right">Search</button>
+                                 <button type="Reset" class="btn btn-default pull-right">Reset</button>
+                              </div>
+                           </div>
+                     </form>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+      <form class="form-horizontal form-label-left input_mask" method="POST" action="{% url 'export_to_excel' %}">
+         {% csrf_token %}
+         <div class="row">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+               <div class="x_panel">
+                  <div class="x_title">
+                     <h2>Employee <small>List</small></h2>
+                     <ul class="nav navbar-right panel_toolbox">
+                        <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                        </li>
+                        <li></li>
+                     </ul>
+                     <div class="clearfix"></div>
+                  </div>
+                 
+                  <div class="x_content">
+                     <table id="datatable" class="table table-striped table-bordered">
+                        <div class="row">
+                       
+                           <input type="hidden" class="form-control" readonly value="{{ leave_branch }}" name="leave_branch_1">
+                           <div class="col-md-4 col-xs-12">
+                              <div class="form-group">
+                                 <label class="control-label col-md-4 col-sm-4 col-xs-12">Date From</label>
+                                 <div class="col-md-8 col-sm-8 col-xs-12">
+                                    <input type="text" class="form-control" readonly value="{{ date_from }}" name="date_from">
+                                 </div>
+                              </div>
+                           </div>
+                           <div class="col-md-4 col-xs-12">
+                              <div class="form-group">
+                                 <label class="control-label col-md-4 col-sm-4 col-xs-12">Date Till</label>
+                                 <div class="col-md-8 col-sm-8 col-xs-12">
+                                    <input type="text" class="form-control" readonly value="{{ date_to }}"  name="date_to" >
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+                        <div class="row">
+                           <div class="col-md-4 col-xs-12">
+                              <div class="form-group">
+                                 <button type="submit" class="btn btn-success col-md-12 col-sm-12 col-xs-12">Export Attendance Report To Excel Sheet</button>
+                              </div>
+                           </div>
+                          
+                           &nbsp;
+                           <thead>
+                              <tr style="background-color:#4AC8AB;">
+                                 <th><font color="white">Emp Code</font></th>
+                                 <th><font color="white">Employee Name</font></th>
+                                 {% for date in dates %}
+                                 <th><font color="white">{{date}}</font></th>
+                                 {% endfor %}
+                              </tr>
+                           </thead>
+                           <tbody>
+                              {% for list in atdn_list %}
+                              <tr>
+                                 <td>{{ list.emp_code }}</td>
+                                 <td>{{ list.emp_name }}</td>
+                                 {% for var in list.dates %}
+                                 <td>{{ var }}</td>
+                                 {% endfor %}
+                              </tr>
+                              {% endfor %}
+                           </tbody>
+                     </table>
+                     </div>
+                  </div>
+               </div>
+            </div>
+      </form>
+      <script >
+         $(document).ready(function() {
+           $('#leave_branch').select2();
+         });
+      </script>
+      </div>
+   </div>
+</div>
+{% endblock content %}
+{% block javascripts %}
+{{ block.super }}
+<script src="/static/vendors/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="/static/vendors/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+<script src="/static/vendors/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
+<script src="/static/vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js"></script>
+<script src="/static/vendors/datatables.net-buttons/js/buttons.flash.min.js"></script>
+<script src="/static/vendors/datatables.net-buttons/js/buttons.html5.min.js"></script>
+<script src="/static/vendors/datatables.net-buttons/js/buttons.print.min.js"></script>
+<script src="/static/vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js"></script>
+<script src="/static/vendors/datatables.net-keytable/js/dataTables.keyTable.min.js"></script>
+<script src="/static/vendors/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
+<script src="/static/vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js"></script>
+<script src="/static/vendors/datatables.net-scroller/js/dataTables.scroller.min.js"></script>
+<script src="/static/vendors/jszip/dist/jszip.min.js"></script>
+<script src="/static/vendors/pdfmake/build/pdfmake.min.js"></script>
+<script src="/static/vendors/pdfmake/build/vfs_fonts.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+{% endblock javascripts %}
+

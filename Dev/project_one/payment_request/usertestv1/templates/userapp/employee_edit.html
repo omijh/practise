@@ -1,0 +1,583 @@
+<!-- template to show selected employee details -->
+
+{% extends "userapp/base_site.html" %}
+
+{% block title %} Form Validation {% endblock title %}
+
+{% block content %}
+  <div class="right_col" role="main">
+    <div class="">
+      <div class="page-title">
+        <div class="title_left">
+          <h3>Employee Details</h3>
+        </div>
+      </div>
+      <div class="clearfix"></div>
+
+      <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+          <div class="x_panel">
+            <div class="x_content">
+              <form class="form-group form-label-left" method="POST" action="{% url 'temp_edit_employee' emp.emp_code %}" id="emplyoyee_edit"  data-dropdown-url="{% url 'ajax_load_cities' %}" > {% csrf_token %}
+              <div class="row">
+
+                <!-- <div class="item form-group col-md-4 col-xs-12">
+                  <label class="control-label col-md-4 col-sm-3 col-xs-12">Request Id
+                  </label>
+                  <div class="col-md-8 col-sm-6 col-xs-12">
+                    <input type="text" value="{{emp.request_id.request_id}}" readonly class="form-control col-md-7 col-xs-12">
+                  </div>
+                </div> -->
+
+                <div class="item form-group col-md-6 col-sm-3 col-xs-12">
+                  <label class="control-label col-md-4 col-sm-3 col-xs-12">Emp Code 
+                  </label>
+                  <div class="col-md-8 col-sm-6 col-xs-12">
+                    <input type="text" value="{{emp.emp_code}}" readonly class="form-control col-md-7 col-xs-12" name="emp_code">
+                  </div>
+                </div>
+
+                <div class="item form-group col-md-6 col-sm-3 col-xs-12">
+                  <label class="control-label col-md-4 col-sm-3 col-xs-12">First Name 
+                  </label>
+                  <div class="col-md-8 col-sm-6 col-xs-12">
+                    <input type="text" value="{{emp.emp_fname}}"  class="form-control col-md-7 col-xs-12" name="emp_first" required>
+                  </div>
+                </div>
+
+                <div class="item form-group col-md-6 col-sm-3 col-xs-12">
+                  <label class="control-label col-md-4 col-sm-3 col-xs-12">Last Name 
+                  </label>
+                  <div class="col-md-8 col-sm-6 col-xs-12">
+                    <input type="text" value="{{emp.emp_lname}}"  class="form-control col-md-7 col-xs-12" name="emp_last" required>
+                  </div>
+                </div>
+
+                <div class="item form-group col-md-6 col-sm-3 col-xs-12">
+                  <label class="control-label col-md-4 col-sm-3 col-xs-12">Personal Email ID 
+                  </label>
+                  <div class="col-md-8 col-sm-6 col-xs-12">
+                    <input type="email" value="{{emp.emp_email}}"  class="form-control col-md-7 col-xs-12" name="emp_email" required >
+                  </div>
+                </div>
+
+                <div class="item form-group col-md-6 col-sm-3 col-xs-12">
+                  <label class="control-label col-md-4 col-sm-3 col-xs-12">Mobile No.
+                  </label>
+                  <div class="col-md-2 col-sm-2 col-xs-2">
+                    <input id="ext" name="ext" class="form-control col-md-7 col-xs-12"  value = "+{{emp.country_isd_code}}" type="text" readonly >
+                  </div>
+                  <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input type="tel" maxlength="10" value="{{emp.emp_mobile}}" class="form-control col-md-7 col-xs-12" name="emp_mobile" required>
+                  </div>
+                </div>
+
+                <!-- <div class="item form-group col-md-6 col-sm-3 col-xs-12">
+                  <label class="control-label col-md-4 col-sm-3 col-xs-12">Country
+                  </label>
+                  <div class="col-md-8 col-sm-6 col-xs-12">
+                    <input type="text" value="{{emp.country.country_name}}" class="form-control col-md-7 col-xs-12" name="country" required>
+                  </div>
+                </div> -->
+
+                <div class="item form-group  col-md-6 col-sm-3 col-xs-12">
+                  <label class="control-label col-md-4 col-sm-3 col-xs-12">Country 
+                  </label>
+                  <div class="col-md-8 col-sm-6 col-xs-12">
+                    <select class="form-control col-md-7 col-xs-12" name="country" id="country" required>
+                      {% for country in country_list %}
+                        {% if country.id == emp.country.id %}
+                        <option value="{{ country.id}}" selected>{{country.country_name }}</option>
+                        {% else %}
+                        <option value="{{ country.id }}">{{ country.country_name }}</option>
+                        {% endif %}
+                     {% endfor %}
+                    </select>
+                  </div>
+                </div>
+
+               <div class="item form-group col-md-6 col-sm-12 col-xs-12">
+                  <label class="control-label col-md-4 col-sm-3 col-xs-12" for="last_name">Reporting Authority <span class="required">*</span>
+                  </label>
+                  <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input type="text" id="authority" name="authority" value="{{emp.reporting_authority}}" class="form-control col-md-7 col-xs-12" required>
+                  </div>
+                </div>
+
+                <div class="item form-group col-md-6 col-sm-12 col-xs-12">
+                  <label for="authority_email" class="control-label col-md-4 col-sm-3 col-xs-12">Reporting Authority Email <span class="required">*</span></label>
+                  <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input id="authority_email" type="email" name="authority_email" class="form-control col-md-7 col-xs-12" value="{{emp.reporting_authority_email}}" required >
+                  </div>
+                </div>
+
+                <div class="item form-group col-md-6 col-sm-3 col-xs-12">
+                  <label class="control-label col-md-4 col-sm-3 col-xs-12">Date of Birth 
+                  </label>
+                  <div class="col-md-8 col-sm-6 col-xs-12">
+                    <input type="date" value="{{emp.emp_dob|date:"Y-m-d"}}"  class="form-control col-md-7 col-xs-12" name="emp_dob" required>
+                  </div>
+                </div>
+
+
+
+                <div class="item form-group col-md-6 col-sm-3 col-xs-12">
+                  <label class="control-label col-md-4 col-sm-3 col-xs-12">Date of Joining
+                  </label>
+                  <div class="col-md-8 col-sm-6 col-xs-12">
+                    <input type="date" value={{emp.date_of_joining|date:"Y-m-d"}} required class="form-control col-md-7 col-xs-12" name="emp_doj" >
+                  </div>
+                </div>
+
+
+                <div class="item form-group  col-md-6 col-sm-3 col-xs-12">
+                  <label class="control-label col-md-4 col-sm-3 col-xs-12">Designation 
+                  </label>
+                  <div class="col-md-8 col-sm-6 col-xs-12">
+                    <select class="form-control col-md-7 col-xs-12" name="designation" id="designation" required>
+                      {% for designation in designation_list %}
+                        {% if designation.id == emp.emp_desg_id %}
+                        <option value="{{ designation.id}}" selected>{{designation.desg_name }}</option>
+                        {% else %}
+                        <option value="{{ designation.id }}">{{ designation.desg_name }}</option>
+                        {% endif %}
+                     {% endfor %}
+                    </select>
+                  </div>
+                </div>
+
+
+                <div id="vertical_div">
+                <div class="item form-group col-md-6 col-sm-3 col-xs-12 ">
+                  <label class="control-label col-md-4 col-sm-3 col-xs-12">Vertical
+                  </label>
+                  <div class="col-md-8 col-sm-6 col-xs-12">
+                     <select class="form-control col-md-7 col-xs-12" name="vertical" id="vertical" required>
+
+                      {% if  not vertical_id == None %}
+                      <option value="{{ vertical_id.id }}" selected>{{ vertical_id.vt_name }}</option>
+
+                      {% for vertical in vertical_list %}
+                     
+                      <option value="{{ vertical.id }}">{{ vertical.vt_name }}</option>
+                       {% endfor %}
+                      {% endif %}
+                    
+                    </select>
+                  </div>
+                </div>
+                </div>
+
+<div id="region_div" >
+                <div class="item form-group col-md-6 col-sm-3 col-xs-12 ">
+                  <label class="control-label col-md-4 col-sm-3 col-xs-12">Region
+                  </label>
+                  <div class="col-md-8 col-sm-6 col-xs-12">
+                     <select class="form-control col-md-7 col-xs-12" name="region" id="region" required>
+
+                      {% if  not region_id == None %}
+                       <option value="{{ region_id.id }}" selected>{{ region_id.rg_name }}</option>
+
+                      {% for region in region_list %}
+                     
+                      <option value="{{ region.id }}">{{ region.rg_name }}</option>
+                      {% endfor %}
+                      {% else %}
+                       <option selected value="0" >None</option>
+
+                      {% endif %}
+                     
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+<div id="division_div" >
+                <div class="item form-group col-md-6 col-sm-3 col-xs-12 ">
+                  <label class="control-label col-md-4 col-sm-3 col-xs-12">Division
+                  </label>
+                  <div class="col-md-8 col-sm-6 col-xs-12">
+                     <select class="form-control col-md-7 col-xs-12" name="division" id="division" required>
+                      {% if  not division_id == None %}
+                       <option value="{{ division_id.id }}" selected>{{ division_id.div_name }}</option>
+
+                      {% for division in division_list %}
+                     
+                      <option value="{{ division.id }}">{{ division.div_name }}</option>
+                      {% endfor %}
+                      {% else %}
+                       <option selected value="0" >None</option>
+
+                      {% endif %}
+                    </select>
+                  </div>
+                </div>
+              </div>
+               
+
+               <div id="branch_div">
+
+                <div class="item form-group col-md-6 col-sm-3 col-xs-12">
+                  <label class="control-label col-md-4 col-sm-3 col-xs-12">Branch 
+                  </label>
+                  <div class="col-md-8 col-sm-6 col-xs-12">
+                   <select class="form-control col-md-7 col-xs-12" name="branch" id="branch" required>
+                     {% if  not branch_id == None %}
+                       <option value="{{ branch_id.id }}" selected>{{ branch_id.br_name }}</option>
+
+                      {% for branch in branch_list %}
+                     
+                      <option value="{{ branch.id }}">{{ branch.br_name }}</option>
+                      {% endfor %}
+                      {% else %}
+                       <option selected value="0" >None</option>
+
+                      {% endif %}
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+                <div class="item form-group col-md-6 col-sm-3 col-xs-12">
+                  <label class="control-label col-md-4 col-sm-3 col-xs-12">Status
+                  </label>
+                  <div class="col-md-8 col-sm-6 col-xs-12">
+                    {% if emp.active == True %}
+                    <input type="text" value="Active"  class="form-control col-md-7 col-xs-12" name="emp_status" readonly>
+                    {% else %} 
+                    <input type="text" value="Inactive" readonly class="form-control col-md-7 col-xs-12" name="emp_status">
+                    {% endif %}
+                  </div>
+                </div>
+
+                 <div class="item form-group col-md-6 col-sm-3 col-xs-12">
+                  <label class="control-label col-md-4 col-sm-3 col-xs-12">Address
+                  </label>
+                  <div class="col-md-8 col-sm-6 col-xs-12"> 
+                      <textarea required class="form-control" rows="5"  name="emp_address" id="comment" >{{emp.emp_address}}</textarea>
+                  </div>
+                </div>
+
+                <div class="item form-group col-md-6 col-sm-3 col-xs-12">
+                  <label class="control-label col-md-4 col-sm-3 col-xs-12">Remark
+                  </label>
+                  <div class="col-md-8 col-sm-6 col-xs-12">
+                      <textarea required class="form-control" rows="5"  name="remark" id="remark" ></textarea>
+                  </div>
+                </div>
+
+              <div class="item form-group col-md-12 col-sm-3 col-xs-12">
+                <div class="pull-right">
+                   <a href="{% url 'employee_detail' emp.emp_code %}" id="cancel" name="cancel" class="btn btn-default">Go Back</a>
+                    {% if edit %}
+                    <input type="submit" name="edit_submit" value="submit" class="btn btn-default">
+                    {% else %}
+
+                     <a href="{% url 'employee_detail' emp.emp_code  %}?ed=True" id="edit" name="edit" class="btn btn-default">Edit</a>
+                    {% endif %}
+                  </div>
+                  </div>
+              </div> 
+<!-- End for row  -->
+
+
+
+
+                <span class="section">Application Status</span>
+                <div class="row">
+                {% for key,value in app_details.items %}
+                  <div class="item form-group col-md-4 col-sm-3 col-xs-12">
+                    <label class="control-label col-md-6 col-sm-3 col-xs-12">{{key}} 
+                    </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                      
+                      <input type="text" value="{{value}}" readonly class="form-control col-md-7 col-xs-12">
+                  
+                    </div>
+                  </div>
+                {% endfor %}
+
+                </div>
+
+
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+  
+   <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+   <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+
+<!-- for country ext -->
+<!-- start -->
+<script>
+  $('#country').select2();
+    $("#country").change(function () {
+      var country = $(this).val();
+      console.log( $(this).val() );
+
+      $.ajax({
+        url: '/ajax/select_country_ext/',
+        data: {
+          'country': country
+        },
+        dataType: 'json',
+        success: function (data) {
+          if (data.ext) {
+
+            document.getElementById("ext").value = data.ext;
+            
+          }
+        }
+      });
+
+    });
+  </script>
+  <!-- end -->
+
+ <!--  <script>
+  $('#vertical').select2();
+    $("#vertical").change(function () {
+      var url = $("#emplyoyee_edit").attr("data-dropdown-url");  // get the url of the `load_cities` view
+      var vertical_id = $(this).val();  // get the selected country ID from the HTML input
+
+
+      if (vertical_id == 3) {
+          
+          $("#region_div").addClass('hidden');
+          $("#division_div").addClass('hidden');
+
+          type ='psd_branch'
+        }
+
+        else{
+           $("#vertical_div").removeClass('hidden');
+          $("#region_div").removeClass('hidden');
+          $("#division_div").removeClass('hidden');
+          $("#branch_div").removeClass('hidden');
+          type ='region'
+        }
+
+      $.ajax({                       // initialize an AJAX request
+        url: url,                    // set the url of the request (= localhost:8000/hr/ajax/load-cities/)
+        data: {
+          'data_id': vertical_id,
+          'type' : type      // add the country id to the GET parameters
+        },
+        success: function (data) {   // `data` is the return of the `load_cities` view function
+         if(vertical_id == 3){
+             $("#branch").html(data);
+          }
+          else{
+          $("#region").html(data);
+           $("#division").html(" <option selected  >None</option> ");
+           $("#branch").html(" <option selected  >None</option> ");
+           } 
+        }
+      });
+
+    });
+    $('#region').select2();
+    $("#region").change(function () {
+      var url = $("#emplyoyee_edit").attr("data-dropdown-url");  // get the url of the `load_cities` view
+      var region_id = $(this).val();  // get the selected country ID from the HTML input
+
+      $.ajax({                       // initialize an AJAX request
+        url: url,                    // set the url of the request (= localhost:8000/hr/ajax/load-cities/)
+        data: {
+          'data_id': region_id,
+          'type' : 'division'      // add the country id to the GET parameters
+        },
+        success: function (data) {   // `data` is the return of the `load_cities` view function
+          $("#division").html(data);  // replace the contents of the city input with the data that came from the server
+           $("#branch").html(" <option selected  >None</option> ");
+        }
+      });
+
+    });
+    $('#division').select2();
+    $("#division").change(function () {
+      var url = $("#emplyoyee_edit").attr("data-dropdown-url");  // get the url of the `load_cities` view
+      var division_id = $(this).val();  // get the selected country ID from the HTML input
+
+      $.ajax({                       // initialize an AJAX request
+        url: url,                    // set the url of the request (= localhost:8000/hr/ajax/load-cities/)
+        data: {
+          'data_id': division_id,
+          'type' : 'branch'       // add the country id to the GET parameters
+        },
+        success: function (data) {   // `data` is the return of the `load_cities` view function
+          $("#branch").html(data);  // replace the contents of the city input with the data that came from the server
+        }
+      });
+
+    });
+
+    $('#branch').select2();
+    $('#location').change( function() {
+       var a = $(this).val();
+      
+       if (a == 'v') {
+          // $('#division_div').toggle();
+          $("#vertical_div").removeClass('hidden');
+          $("#region_div").addClass('hidden');
+          $("#division_div").addClass('hidden');
+          $("#branch_div").addClass('hidden');
+
+         
+         
+       }
+       if (a == 'r') {
+         $("#vertical_div").removeClass('hidden');
+          $("#region_div").removeClass('hidden');
+          $("#division_div").addClass('hidden');
+          $("#branch_div").addClass('hidden');
+         
+       } 
+       if (a == 'd') {
+          $("#vertical_div").removeClass('hidden');
+          $("#region_div").removeClass('hidden');
+          $("#division_div").removeClass('hidden');
+          $("#branch_div").addClass('hidden');
+         
+       } 
+       if (a == 'b') {
+         $("#vertical_div").removeClass('hidden');
+          $("#region_div").removeClass('hidden');
+          $("#division_div").removeClass('hidden');
+          $("#branch_div").removeClass('hidden');
+       } 
+     });
+
+
+
+    function toggle() {
+    var x = document.getElementById("myDIV");
+    if (x.style.display === "none") {
+        x.style.display = "block";
+    } else {
+        x.style.display = "none";
+    }
+}
+
+  </script> -->
+<script >
+  $(document).ready(function() {
+    $('#designation').select2();
+});
+</script>
+
+<script>
+     $('#vertical').select2();
+     $("#vertical").change(function () {
+      var url = $("#emplyoyee_edit").attr("data-dropdown-url");  
+      var vertical_id = $(this).val();  
+
+
+      if (vertical_id == 3) {
+
+          type ='branch'
+        }
+
+        else{
+
+          $("#vertical_div").removeClass('hidden');
+          $("#region_div").removeClass('hidden');
+          $("#division_div").removeClass('hidden');
+          $("#branch_div").removeClass('hidden');
+          type ='branch'
+        }
+
+        // $("#division").html(" <option value='s'>None</option> ");
+        // $("#region").html(" <option value='s'>None</option> ");
+
+      $.ajax({                       
+        url: url,                    
+        data: {
+          'data_id': vertical_id,
+          'type' : type     
+        },
+        success: function (data) {  
+          
+          if(vertical_id == 3){
+             $("#branch").html(data);
+          }
+          else{
+
+          $("#branch").html(data);
+          
+           } 
+        }
+      });
+
+    });
+    
+  // Branch filtering ,Returns json of region and region 
+  $('#branch').select2();
+  $("#branch").change(function () {
+    var branch_id = $(this).val();
+    
+    var url = $("#emplyoyee_edit").attr("data-dropdown-url");
+
+      $.ajax({                       // initialize an AJAX request
+          url: url,                    // set the url of the request (= localhost:8000/hr/ajax/load-cities/)
+          data: {
+            'data_id': branch_id,
+            'type' : 'branch_list'       // add the branch id to the GET parameters
+          },
+          success: function (data) {   // `data` is the return of the `load_cities` view 
+
+
+            $("#division").html(" <option value="+ data.division.id+">"+data.division.name+"</option> ");
+            $("#region").html(" <option value="+ data.region.id+">"+data.region.name+"</option> ");
+              
+          }
+        });
+    });
+
+  $('#location').change( function() {
+     var a = $(this).val();
+    
+     if (a == 'vt') {
+        // $('#division_div').toggle();
+        $("#vertical_div").removeClass('hidden');
+        $("#region_div").addClass('hidden');
+        $("#division_div").addClass('hidden');
+        $("#branch_div").addClass('hidden');
+     }
+     if (a == 'rg') {
+       $("#vertical_div").removeClass('hidden');
+        $("#region_div").removeClass('hidden');
+        $("#division_div").addClass('hidden');
+        $("#branch_div").addClass('hidden');
+     } 
+     if (a == 'dv') {
+        $("#vertical_div").removeClass('hidden');
+        $("#region_div").removeClass('hidden');
+        $("#division_div").removeClass('hidden');
+        $("#branch_div").addClass('hidden');
+     } 
+     if (a == 'br') {
+       $("#vertical_div").removeClass('hidden');
+        $("#region_div").removeClass('hidden');
+        $("#division_div").removeClass('hidden');
+        $("#branch_div").removeClass('hidden');
+     } 
+  });
+</script>
+
+
+    </div>
+  </div>
+{% endblock content %}
+
+{% block javascripts %}
+  {{ block.super }}
+  <!-- validator -->
+  <script src="/static/vendors/validator/validator.js"></script>
+{% endblock javascripts %}

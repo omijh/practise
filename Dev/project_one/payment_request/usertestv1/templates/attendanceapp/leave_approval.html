@@ -1,0 +1,197 @@
+
+
+<!-- template to show employee details to Branch Manager -->
+{% extends "userapp/base_site.html" %} {% block title %} Form Validation {% endblock title %} {% block container_body %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="google-form-master/google-form.js"></script>
+<div class="right_col" role="main">
+   <div class="">
+      <div class="page-title">
+         <div class="title_left">
+            <h3>Leave Application Details</h3>
+         </div>
+      </div>
+      <div class="clearfix"></div>
+      <div class="row">
+         <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="x_panel">
+               <div class="x_content">
+                  <form class="form-horizontal form-label-left" method="POST" action="{% url 'approved_leave' leave.emp_code leave.id  %}" enctype="multipart/form-data" >
+                     {% csrf_token %}
+                     <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Emp Code:
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                           <input type="text" value="{{leave.emp_code}}" readonly class="form-control col-md-7 col-xs-12">
+                        </div>
+                     </div>
+                     <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Emp Name:
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                           <input type="text" value="{{leave.emp_name}}" readonly class="form-control col-md-7 col-xs-12">
+                        </div>
+                     </div>
+                     <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Emp Email:
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                           <input type="text" value="{{leave.emp_email}}" readonly class="form-control col-md-7 col-xs-12">
+                        </div>
+                     </div>
+                     <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Leave Type:
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                           <input type="text" value="{{leave.leave_type_id.leave_type}}" readonly class="form-control col-md-7 col-xs-12">
+                        </div>
+                     </div>
+                     <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Date From:
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                           <input type="text" value="{{leave.date_from|date:" d-m-Y "}}" readonly class="form-control col-md-7 col-xs-12">
+                        </div>
+                     </div>
+                     <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Date Till:
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                           <input type="text" value="{{leave.date_to|date:" d-m-Y "}}" readonly class="form-control col-md-7 col-xs-12">
+                        </div>
+                     </div>
+                     <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Uploaded Docs:
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                           <a href="{{ leave.sick_lev_doc_pic }}" download>Download Doc</a>
+                        </div>
+                     </div>
+                     <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12">LWP:
+                        </label>
+                        <div class="col-md-2 col-sm-2 col-xs-12">
+                           <input type="checkbox" name="lwp" >
+                        </div>
+                     </div>
+                     <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Click Here To:
+                        </label>
+                        <div class="col-md-2 col-sm-2 col-xs-12">
+                           <button type="button" class="btn btn-primary pull-right" data-toggle="modal" data-target=".bs-example-modal-lm">View Balanced Leave</button>
+                        </div>
+                     </div>
+                     <div class="item form-group">
+                        <div class="col-md-9 col-sm-12 col-xs-12">
+                           <button type="button" class="btn btn-success pull-right" data-toggle="modal" data-target=".bs-activate-modal-sm" >Apporve Leave Request</button>
+                           <button type="button" class="btn btn-primary pull-right" data-toggle="modal" data-target=".bs-example-modal-sm">Reject</button>
+                        </div>
+                        <div class="col-md-3 col-sm-12 col-xs-12 ">
+                        </div>
+                     </div>
+                     <div class="modal fade bs-activate-modal-sm" tabindex="-1" role="dialog" aria-hidden="true">
+                        <div class="modal-dialog modal-sm">
+                           <div class="modal-content">
+                              <div class="modal-header">
+                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
+                                 </button>
+                                 <h4 class="modal-title" id="myModalLabel2">Confirmation </h4>
+                              </div>
+                              <div class="modal-body">
+                                 <p>Are You Sure to Aprrove User Leave ?</p>
+                              </div>
+                              <div class="modal-footer">
+                                 <button type="button" class="btn btn-default" data-dismiss="modal">
+                                 Cancel </button>
+                                 <!-- <a href="{% url 'approved_leave' leave.emp_code leave.id  %}" id="approve" name="approve" class="btn btn-success">Approve</a> -->
+                                 <button type="submit" class="btn btn-success">
+                                 Approve </button>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+               </div>
+            </div>
+            </form>
+            <form method="POST" action="{% url 'reject_leave' leave.id leave.emp_code %}">
+               {% csrf_token %}
+               <input type="text" value={{leave.emp_code}} hidden name="emp_code">
+               <div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-hidden="true">
+                  <div class="modal-dialog modal-sm">
+                     <div class="modal-content">
+                        <div class="modal-header">
+                           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
+                           </button>
+                           <h4 class="modal-title" id="myModalLabel2">Reject Employee Leave</h4>
+                        </div>
+                        <div class="modal-body">
+                           <h4>Please Enter the Reason for Leave Rejection</h4>
+                           <input type="text" class="form-control" placeholder="Enter the reason..." name='reason' required>
+                        </div>
+                        <div class="modal-footer">
+                           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                           <button type="submit" class="btn btn-success">Submit</button>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </form>
+            <!-- end small modal -->
+            <form method="POST">
+               {% csrf_token %}
+               <!-- <input type="text" value={{leave.emp_code}} hidden name="emp_code"> -->
+               <div class="modal fade bs-example-modal-lm" tabindex="-1" role="dialog" aria-hidden="true">
+                  <div class="modal-dialog modal-lm">
+                     <div class="modal-content">
+                        <div class="modal-header">
+                           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
+                           </button>
+                           <h4 class="modal-title" id="myModalLabel2">Employee's Balanced Leave</h4>
+                           <table id="datatable" class="table table-striped table-bordered">
+                              <thead>
+                                 <tr style="background-color:#4AC8AB;">
+                                    <th>
+                                       <center><font color="white">Emp Code</font></center>
+                                    </th>
+                                    <th>
+                                       <center><font color="white">Emp Name</font></center>
+                                    </th>
+                                    {% for leave in leave_types %}
+                                    <th><font color="white">{{ leave.short_name_leave_type }}</font></th>
+                                    {% endfor %}
+                                 </tr>
+                              </thead>
+                              <tbody>
+                                 <tr>
+                                    <th>{{ emp.emp_code }}</th>
+                                    <th>{{ emp.emp_fname }}&nbsp;{{ emp.emp_lname }}</th>
+                                    {% for bal in bal_lev_lists %}
+                                    {% for leave in leave_types %}
+                                    {% for key,value in bal.items %}
+                                    {% if key == leave.short_name_leave_type %}
+                                    <th>{{ value }}</th>
+                                    {% endif %}
+                                    {% endfor %}
+                                    {% endfor %}
+                                    {% endfor %}
+                                 </tr>
+                              </tbody>
+                           </table>
+                           <div class="modal-footer">
+                              <button type="button" class="btn btn-default" data-dismiss="modal">OK</button>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+            </form>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+</div>
+{% endblock container_body %} {% block javascripts %} {{ block.super }}
+<!-- validator -->
+<script src="/static/vendors/validator/validator.js"></script>
+{% endblock javascripts %}
+

@@ -1,0 +1,532 @@
+<!-- template to add a new employee -->
+
+{% extends "userapp/base_site.html" %}
+
+{% block title %} Form Validation {% endblock title %}
+
+{% block content %}
+	<div class="right_col" role="main">
+		<div class="">
+			<div class="page-title">
+				<!-- <div class="title_left">
+					<h3>Form Validation</h3>
+				</div>
+
+				<div class="title_right">
+					<div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
+						<div class="input-group">
+							<input type="text" class="form-control" placeholder="Search for...">
+							<span class="input-group-btn">
+												<button class="btn btn-default" type="button">Go!</button>
+										</span>
+						</div>
+					</div>
+				</div> -->
+			</div>
+			<div class="clearfix"></div>
+
+			<div class="row">
+				<div class="col-md-12 col-sm-12 col-xs-12">
+					<div class="x_panel">
+						<div class="x_content">
+
+							<form class="form-group form-label-left" method="POST" action="{% url 'save_employee' %}" id="employeeForm" data-dropdown-url="{% url 'ajax_load_cities' %}" novalidate>{% csrf_token %}
+
+							 <!-- Add Employee Details Form  -->
+								<span class="section">Employee data</span>
+
+								<!-- <div class="item form-group">
+									<label class="control-label col-md-4 col-sm-3 col-xs-12" for="request_id">Request Id <span class="required">*</span>
+									</label>
+									<div class="col-md-6 col-sm-6 col-xs-12">
+										<input id="request_id" class="form-control col-md-7 col-xs-12" data-validate-length-range="2,20" required="required" name="request_id" placeholder=""  type="text" required="required">
+									</div>
+								</div> -->
+
+								<div class="item form-group col-md-6 col-sm-12 col-xs-12">
+									<label class="control-label col-md-4 col-sm-3 col-xs-12" for="emp_code">Emp Code <span class="required">*</span>
+									</label>
+									<div class="col-md-6 col-sm-6 col-xs-12">
+										<input type="text" id="emp_code" name="emp_code"  class="form-control col-md-7 col-xs-12" required="required" data-validate-length-range="2,20" onkeypress="return AvoidSpace(event)">
+									</div>
+								</div>
+								
+
+								<div class="item form-group col-md-6 col-sm-12 col-xs-12">
+									<label class="control-label col-md-4 col-sm-3 col-xs-12" for="first_name">First Name <span class="required">*</span>
+									</label>
+									<div class="col-md-6 col-sm-6 col-xs-12">
+										<input type="text" id="first_name" name="first_name" class="form-control col-md-7 col-xs-12" data-validate-length-range="2,20" required="required">
+									</div>
+								</div>
+
+								<div class="item form-group col-md-6 col-sm-12 col-xs-12">
+									<label class="control-label col-md-4 col-sm-3 col-xs-12" for="last_name">Last Name <span class="required">*</span>
+									</label>
+									<div class="col-md-6 col-sm-6 col-xs-12">
+										<input type="text" id="last_name" name="last_name"  class="form-control col-md-7 col-xs-12" data-validate-length-range="2,20" required="required">
+									</div>
+								</div>
+								<!-- <input type="text" id="txtEmpName" onkeypress="return AvoidSpace(event)"> -->
+
+								 <div class="item form-group col-md-6 col-sm-12 col-xs-12">
+									<label for="dob" class="control-label col-md-4 col-sm-3 col-xs-12">Date of Birth <span class="required">*</span>
+									</label >
+									<div class="col-md-6 col-sm-6 col-xs-12 ">
+										<input id="dob" type="date" name="dob"  class="form-control col-md-7 col-xs-12"  required="required">
+									</div>
+								</div>
+
+								<div class="item form-group col-md-6 col-sm-12 col-xs-12">
+									<label for="email_id" class="control-label col-md-4 col-sm-3 col-xs-12">Personal Email ID <span class="required">*</span></label>
+									<div class="col-md-6 col-sm-6 col-xs-12">
+										<input id="email_id" type="email" name="email_id" class="form-control col-md-7 col-xs-12" required onkeypress="return AvoidSpace(event)">
+									</div>
+								</div>
+
+								<div class="item form-group col-md-6 col-sm-12 col-xs-12">
+									<label class="control-label col-md-4 col-sm-3 col-xs-12">Country <span class="required">*</span></label>
+									<div class="col-md-6 col-sm-6 col-xs-12">
+										<select class="form-control col-md-7 col-xs-12" name="country" id="country" required>
+											<!-- <option value="">None</option> -->
+											{% for country in country_list %}
+											{% if country.country_name == 'India' %}
+											<option selected value="{{ country.id }}">{{ country.country_name }}</option>
+											{% else %}
+											<option value={{ country.id }}>{{ country.country_name }}</option>
+											{% endif %}
+										 {% endfor %}
+										</select>
+									</div>
+								</div>
+
+								<div class="item form-group col-md-6 col-sm-12 col-xs-12">
+									<label class="control-label col-md-4 col-sm-3 col-xs-12" for="contact_num">Mobile No. <span class="required">*</span>
+									</label>
+									<div class="col-md-2 col-sm-2 col-xs-2">
+										<input id="ext" name="ext" class="form-control col-md-7 col-xs-12"  type="text" readonly value="+91">
+									</div>
+									<div class="col-md-4 col-sm-4 col-xs-12">
+										<input id="contact_num" name="contact_num" class="form-control col-md-7 col-xs-12"  type="tel" maxlength="10" >
+									</div>
+								</div>
+
+								<div class="item form-group col-md-6 col-sm-12 col-xs-12">
+									<label for="email_id" class="control-label col-md-4 col-sm-3 col-xs-12">Date of Joining <span class="required">*</span></label>
+									<div class="col-md-6 col-sm-6 col-xs-12 ">
+										<input id="doj" type="date" name="doj"  class="form-control col-md-7 col-xs-12"  required="required">
+									</div>
+								</div>
+
+								<div class="item form-group col-md-6 col-sm-12 col-xs-12">
+									<label class="control-label col-md-4 col-sm-3 col-xs-12" for="last_name">Reporting Authority <span class="required">*</span>
+									</label>
+									<div class="col-md-6 col-sm-6 col-xs-12">
+										<input type="text" id="authority" name="authority"  class="form-control col-md-7 col-xs-12" data-validate-length-range="2,20" required="required">
+									</div>
+								</div>
+
+								<div class="item form-group col-md-6 col-sm-12 col-xs-12">
+									<label for="authority_email" class="control-label col-md-4 col-sm-3 col-xs-12">Reporting Authority Email <span class="required">*</span></label>
+									<div class="col-md-6 col-sm-6 col-xs-12">
+										<input id="authority_email" type="email" name="authority_email" class="form-control col-md-7 col-xs-12" required >
+									</div>
+								</div>
+
+								<div class="item form-group col-md-6 col-sm-12 col-xs-12">
+									<label class="control-label col-md-4 col-sm-3 col-xs-12">Designation <span class="required">*</span></label>
+									<div class="col-md-6 col-sm-6 col-xs-12">
+										<select class="form-control col-md-7 col-xs-12" name="designation" id="designation" required>
+											<option value="">None</option>
+											{% for designation in designation_list %}
+											<option value="{{ designation.id }}">{{ designation.desg_name }}</option>
+										 {% endfor %}
+										</select>
+									</div>
+								</div>
+
+								<div id="vertical_div" >
+								 <div class="item form-group col-md-6 col-sm-12 col-xs-12">
+									<label class="control-label col-md-4 col-sm-3 col-xs-12">Vertical <span class="required">*</span></label>
+									<div class="col-md-6 col-sm-6 col-xs-12">
+										<select class="form-control col-md-7 col-xs-12" name="vertical" id="vertical"  required>
+												<option value="">None</option> 
+											{% for vertical in vertical_list %}
+											<option value="{{ vertical.id }}">{{ vertical.vt_name }} </option>
+										 {% endfor %}
+										</select>
+									</div>
+								</div>
+
+							</div>
+
+							 <div id="region_div" >
+							<!--   class="hidden" -->
+								 <div class="item form-group col-md-6 col-sm-12 col-xs-12">
+									<label class="control-label col-md-4 col-sm-3 col-xs-12">Region</label>
+									<div class="col-md-6 col-sm-6 col-xs-12">
+										<select class="form-control col-md-7 col-xs-12" name="region" id="region">
+												<option value="" >None</option> 
+											<!-- {% for region in region_list %}
+											<option value="{{ region.id }}">{{ region.rg_name }}</option>
+										 {% endfor %} -->
+										</select>
+									</div>
+								</div>
+							</div>
+						<div id="division_div" >
+								<div class="item form-group col-md-6 col-sm-12 col-xs-12">
+									<label class="control-label col-md-4 col-sm-3 col-xs-12">Division</label>
+									<div class="col-md-6 col-sm-6 col-xs-12">
+										<select class="form-control col-md-7 col-xs-12" name="division" id="division">
+												<option  value=""  >None</option> 
+									 <!--    {% for division in division_list %}
+											<option value="{{ division.id }}">{{ division.div_name }}</option>
+										 {% endfor %} -->
+										</select>
+									</div>
+								</div>
+							</div>
+
+						<div id="branch_div" >
+						 <div class="item form-group col-md-6 col-sm-12 col-xs-12">
+							<label class="control-label col-md-4 col-sm-3 col-xs-12">Branch</label>
+							<div class="col-md-6 col-sm-6 col-xs-12">
+								<select class="form-control col-md-7 col-xs-12" name="branch" id="branch"  onchange="jsFunction(this.value,this.id);" >
+										<option   value="" >None</option> 
+							 <!--    {% for branch in branch_list %}
+									<option value="{{ branch.id }}">{{ branch.br_name }}</option>
+								 {% endfor %} -->
+								</select>
+							</div>
+						</div>
+						</div>
+
+
+
+						<div class="item form-group col-md-6 col-sm-12 col-xs-12"></div>
+
+						<div class="item form-group col-md-6 col-sm-12 col-xs-12">
+									<label for="emp_address" class="control-label col-md-4 col-sm-3 col-xs-12">Address <span class="required">*</span></label>
+									<div class="col-md-6 col-sm-6 col-xs-12">
+										<textarea  class="form-control" rows="5"  name="emp_address" id="comment" required ></textarea>
+									</div>
+								</div>
+
+							 <!--  <div class="item form-group">
+									<label class="control-label col-md-4 col-sm-3 col-xs-12">Branch Manager</label>
+									<div class="col-md-6 col-sm-6 col-xs-12">
+										<select class="form-control col-md-7 col-xs-12" name="branch_manager" id="branch" >
+											{% for branch_manager in branch_manager_list %}
+											<option value="{{ branch_manager.bm_id }}">{{ branch_manager.bm_name }}</option>
+										 {% endfor %}
+										</select>
+									</div>
+								</div>
+
+								 <div class="item form-group">
+									<label class="control-label col-md-4 col-sm-3 col-xs-12">Department</label>
+									<div class="col-md-6 col-sm-6 col-xs-12">
+										<select class="form-control col-md-7 col-xs-12" name="department" id="department">
+											{% for department in department_list %}
+											<option value="{{ department.dept_id }}">{{ department.dept_name }}</option>
+										 {% endfor %}
+										</select>
+									</div>
+								</div>
+
+									-->
+							<div class="item form-group col-md-6 col-sm-12 col-xs-12 "></div>
+							<div class="item form-group col-md-6 col-sm-12 col-xs-12 ">
+									<div class="col-md-12 col-sm-12 col-xs-12 ">
+										
+										<!-- <button id="send" type="submit" class="btn btn-success pull-right">Submit</button> -->
+										<button type="button" class="btn btn-primary pull-right" data-toggle="modal" data-target=".bs-activate-modal-sm">Submit</button>
+										<button type="reset" class="btn btn-default pull-right">Reset</button>
+
+										<a class="btn btn-default pull-right" href="{% url 'index' %}">Cancel</a>
+
+									</div>
+								</div>
+								
+								
+
+								<div class="modal fade bs-activate-modal-sm" tabindex="-1" role="dialog" aria-hidden="true">
+							     <div class="modal-dialog modal-sm">
+							       <div class="modal-content">
+
+							         <div class="modal-header">
+							           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
+							           </button>
+							           <h4 class="modal-title" id="myModalLabel2">Confirmation </h4>
+							         </div>
+							         <div class="modal-body">
+
+							           <p>Do you want to Add the Employee?</p>
+							          
+							         </div>
+							         <div class="modal-footer">
+							           <button type="button" class="btn btn-default" data-dismiss="modal">
+							           No </button>
+
+							           <button type="submit" class="btn btn-success" form="employeeForm" value="Submit">Yes</button>
+
+							         </div>
+
+							       </div>
+							     </div>
+							 </div>
+
+
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+
+<!-- for type & search dropdown -->
+<!-- start -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+<script >
+	$(document).ready(function() {
+    $('#designation').select2();
+});
+</script>
+
+<!-- <script >
+	$(document).ready(function() {
+    $('#vertical').select2();
+});
+</script>
+<script >
+	$(document).ready(function() {
+    $('#region').select2();
+});
+</script>
+<script >
+	$(document).ready(function() {
+    $('#division').select2();
+});
+</script>
+<script >
+	$(document).ready(function() {
+    $('#branch').select2();
+});
+</script> -->
+<!-- end -->
+
+<!-- for emp code validation -->
+<!-- start -->
+
+<script>
+function AvoidSpace(event) {
+    var k = event ? event.which : window.event.keyCode;
+    if (k == 32) return false;
+}
+</script>
+<script>
+    $("#emp_code").change(function () {
+      var emp_code = $(this).val();
+      // var emp_code = emp_code1.trim();
+      console.log( $(this).val() );
+
+      $.ajax({
+        url: '/ajax/validate_emp_code/',
+        data: {
+          'emp_code': emp_code
+        },
+        dataType: 'json',
+        success: function (data) {
+          if (data.is_taken) {
+            alert("An Employee with this Emp Code already exists.");
+          }
+        }
+      });
+
+    });
+  </script>
+  <script>
+    $("#email_id").change(function () {
+      var email_id = $(this).val();
+      // var email_id = email_id1.trim();
+      console.log( $(this).val() );
+
+      $.ajax({
+        url: '/ajax/validate_email_id/',
+        data: {
+          'email_id': email_id
+        },
+        dataType: 'json',
+        success: function (data) {
+          if (data.is_taken) {
+            alert("An Employee with this Personal Email ID Already Exists.");
+          }
+        }
+      });
+
+    });
+  </script>
+  <!-- end -->
+
+  <!-- for country ext -->
+<!-- start -->
+<script>
+	$('#country').select2();
+    $("#country").change(function () {
+      var country = $(this).val();
+      console.log( $(this).val() );
+
+      $.ajax({
+        url: '/ajax/select_country_ext/',
+        data: {
+          'country': country
+        },
+        dataType: 'json',
+        success: function (data) {
+          if (data.ext) {
+
+          	document.getElementById("ext").value = data.ext;
+            
+          }
+        }
+      });
+
+    });
+  </script>
+  <!-- end -->
+
+<script>
+	var today = new Date();
+	var dd = today.getDate();
+	var mm = today.getMonth()+1; //January is 0!
+	var yyyy = today.getFullYear();
+	if(dd<10){
+					dd='0'+dd
+			} 
+			if(mm<10){
+					mm='0'+mm
+			} 
+
+	today = yyyy+'-'+mm+'-'+dd;
+	document.getElementById("dob").setAttribute("max", today);
+</script>
+
+
+<script>
+		 $('#vertical').select2();
+		 $("#vertical").change(function () {
+			var url = $("#employeeForm").attr("data-dropdown-url");  
+			var vertical_id = $(this).val();  
+
+
+			if (vertical_id == 3) {
+
+					type ='branch'
+				}
+
+				else{
+
+					$("#vertical_div").removeClass('hidden');
+					$("#region_div").removeClass('hidden');
+					$("#division_div").removeClass('hidden');
+					$("#branch_div").removeClass('hidden');
+					type ='branch'
+				}
+
+				$("#division").html("<option value=''>None</option>");
+				$("#region").html("<option value=''>None</option>");
+
+			$.ajax({                       
+				url: url,                    
+				data: {
+					'data_id': vertical_id,
+					'type' : type     
+				},
+				success: function (data) {  
+					
+					if(vertical_id == 3){
+						 $("#branch").html(data);
+					}
+					else{
+
+					$("#branch").html(data);
+					
+					 } 
+				}
+			});
+
+		});
+		
+	// Branch filtering ,Returns json of region and region 
+	// $('#branch').select2();
+	$('#branch').select2();
+	$("#branch").change(function () {
+		
+		var branch_id = $(this).val();
+		
+		var url = $("#employeeForm").attr("data-dropdown-url");
+
+			$.ajax({                       // initialize an AJAX request
+					url: url,                    // set the url of the request (= localhost:8000/hr/ajax/load-cities/)
+					data: {
+						'data_id': branch_id,
+						'type' : 'branch_list'       // add the branch id to the GET parameters
+					},
+					success: function (data) {   // `data` is the return of the `load_cities` view 
+
+
+						$("#division").html(" <option value="+ data.division.id+">"+data.division.name+"</option> ");
+						$("#region").html(" <option value="+ data.region.id+">"+data.region.name+"</option> ");
+							
+					}
+				});
+		});
+
+	$('#location').change( function() {
+		 var a = $(this).val();
+		
+		 if (a == 'vt') {
+				// $('#division_div').toggle();
+				$("#vertical_div").removeClass('hidden');
+				$("#region_div").addClass('hidden');
+				$("#division_div").addClass('hidden');
+				$("#branch_div").addClass('hidden');
+		 }
+		 if (a == 'rg') {
+			 $("#vertical_div").removeClass('hidden');
+				$("#region_div").removeClass('hidden');
+				$("#division_div").addClass('hidden');
+				$("#branch_div").addClass('hidden');
+		 } 
+		 if (a == 'dv') {
+				$("#vertical_div").removeClass('hidden');
+				$("#region_div").removeClass('hidden');
+				$("#division_div").removeClass('hidden');
+				$("#branch_div").addClass('hidden');
+		 } 
+		 if (a == 'br') {
+			 $("#vertical_div").removeClass('hidden');
+				$("#region_div").removeClass('hidden');
+				$("#division_div").removeClass('hidden');
+				$("#branch_div").removeClass('hidden');
+		 } 
+	});
+</script>
+
+	
+
+
+
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock content %}
+
+{% block javascripts %}
+	{{ block.super }}
+	<!-- validator -->
+	<script src="/static/vendors/validator/validator.js"></script>
+	
+{% endblock javascripts %}

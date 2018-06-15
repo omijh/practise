@@ -1,0 +1,173 @@
+
+
+<!-- template to show all employee records -->
+{% extends "userapp/base_site.html" %}
+{% block title %} Form Validation {% endblock title %}
+{% block content %}
+<div class="right_col" role="main">
+   <div class="">
+      <div class="page-title">
+         <div class="title_left">
+            <h3>Form Validation</h3>
+         </div>
+         <div class="title_right">
+            <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
+               <div class="input-group">
+                  <input type="text" class="form-control" placeholder="Search for...">
+                  <span class="input-group-btn">
+                  <button class="btn btn-default" type="button">Go!</button>
+                  </span>
+               </div>
+            </div>
+         </div>
+      </div>
+      <div class="clearfix"></div>
+      <div class="row">
+         <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="x_panel">
+               <div class="x_content">
+                  <form class="form-horizontal form-label-left" method="POST" action="{% url 'submit_leave' %}"   novalidate enctype="multipart/form-data">
+                     {% csrf_token %}
+                     <span class="section">Application Data</span>
+                     <div class="row">
+                        <div class="item form-group col-md-4 col-xs-12">
+                           <label class="control-label col-md-4 col-sm-3 col-xs-12">EmpCode:
+                           </label>
+                           <div class="col-md-8 col-sm-6 col-xs-12">
+                              <input class="form-control" id='emp_code_1' name='emp_code' type="text" required ></input>
+                           </div>
+                        </div>
+                        <div class="item form-group col-md-4 col-xs-12">
+                           <label class="control-label col-md-4 col-sm-3 col-xs-12">Employee Name:
+                           </label>
+                           <div class="col-md-8 col-sm-6 col-xs-12">
+                              <input class="form-control" id='user_name' name='user_name' type="text" required ></input>
+                           </div>
+                        </div>
+                        <div class="item form-group col-md-4 col-xs-12">
+                           <label class="control-label col-md-4 col-sm-3 col-xs-12">Employee Email:
+                           </label>
+                           <div class="col-md-8 col-sm-6 col-xs-12">
+                              <input class="form-control" id='user_email' name='user_email' type="text" required ></input>
+                           </div>
+                        </div>
+                        <div class="item form-group col-md-4 col-xs-12">
+                           <label class="control-label col-md-4 col-sm-3 col-xs-12">Leave Type:
+                           </label>
+                           <div class="col-md-8 col-sm-6 col-xs-12">
+                              <select class="form-control col-md-7 col-xs-12" name="leave_type" id="leave_type"  required>
+                                 <option>-- Select --</option>
+                                 {% for leave in leaves %}
+                                 <option value="{{ leave.leave_type }}">{{ leave.leave_type }}</option>
+                                 {% endfor %}
+                              </select>
+                           </div>
+                        </div>
+                        <div class="item form-group col-md-4 col-sm-3 col-xs-12">
+                           <label class="control-label col-md-4 col-sm-3 col-xs-12">Date From:
+                           </label>
+                           <div class="col-md-8 col-sm-6 col-xs-12">
+                              <input class="form-control" name='date_from' id="date_from" type="Date" required ></input>
+                           </div>
+                        </div>
+                        <div class="item form-group col-md-4 col-sm-3 col-xs-12">
+                           <label class="control-label col-md-4 col-sm-3 col-xs-12">Date To: 
+                           </label>
+                           <div class="col-md-8 col-sm-6 col-xs-12">
+                              <input class="form-control" name='date_to' id="date_to" type="Date" required ></input>
+                           </div>
+                        </div>
+                        <div class="item form-group col-md-4 col-sm-3 col-xs-12" id="div_sick_lev_doc_pic" hidden >
+                           <label class="control-label col-md-4 col-sm-3 col-xs-12">Upload Docs: 
+                           </label>
+                           <div class="col-md-8 col-sm-6 col-xs-12">
+                              <input type="file" name="myfile">
+                              <!-- <input type="file" name='myile' id="sick_lev_doc_pic"></input> -->
+                           </div>
+                        </div>
+                        <span class="section">&nbsp;</span>
+                        <div class="form-group">
+                           <div class="col-md-6 col-md-offset-6 ">
+                              <!-- <button id="send_submit" class="btn btn-success pull-right">Submit22</button> -->
+                              <!-- <a id="send_submit" class="btn btn-success pull-right">Submit22</a> -->
+                              <button id="send_submit" name="send" class="btn btn-success pull-right">Submit</button>
+                              <button type="reset" class="btn btn-default pull-right">Cancel</button>
+                           </div>
+                        </div>
+                     </div>
+                  </form>
+                  
+               </div>
+            </div>
+         </div>
+      </div>
+      <!-- CODE TO DISPLAY EMPLOYEE BALANCED LEAVES -->
+      
+   </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script>
+   $("#emp_code_1").change(function () {
+     var emp_code = $("#emp_code_1").val();
+     console.log( $(this).val() );
+     $.ajax({
+       url: '/ajax/emp_code_validate/',
+       data: {
+         'emp_code': emp_code
+       },
+       dataType: 'json',
+       success: function (data) {
+         if (data.is_taken) {
+           alert("An Employee with this Emp Code Does not exists !!!");
+         }
+       }
+     });
+   });
+</script>
+<!-- end -->
+
+<!-- To Check if Any Doc is uploaded when employee takes more then 2days leave -->
+<script>
+   $("#date_to").change(function () {
+     var emp_code = $("#emp_code_1").val();
+     var user_name = $("#user_name").val();
+     var date_from = $("#date_from").val();
+     var date_to = $("#date_to").val();
+     var leave_type = $("#leave_type").val();
+     if (leave_type=='Sick Leave'){
+        var d1 = new Date(date_from);
+        var d2 = new Date(date_to);
+        var timeDiff = d2.getTime() - d1.getTime();
+        var DaysDiff = timeDiff / (1000 * 3600 * 24);
+        if (DaysDiff >= 1){
+           document.getElementById("div_sick_lev_doc_pic").style.display = 'block';
+        }
+     }
+     $.ajax({
+       url: '/ajax/validate_send/',
+       data: {
+         'emp_code': emp_code,
+         'user_name': user_name,
+         'date_from': date_from,
+         'date_to': date_to,
+         'leave_type': leave_type,
+   
+       },
+       dataType: 'json',
+       success: function (data) {
+         if (data.is_taken) {
+           alert("Leave Application with this Emp Code,Leave Type and Date already exists.");
+         }
+       }
+     });
+   });
+</script>
+{% endblock content %}
+{% block javascripts %}
+{{ block.super }}
+<!-- validator -->
+<script src="/static/vendors/validator/validator.js"></script>
+<!-- for emp code validation -->
+<!-- start -->
+{% endblock javascripts %}
+

@@ -1,0 +1,38 @@
+                      <div class="modal-body">
+
+                        <h4>Please Select apps to be assigned to Employee:</h4>
+                        
+                        <p style="padding: 5px;">
+                          {% for app in apps %}
+                            {% if app.app_name == 'Gmail' %}
+                              <input type="checkbox" name="apps" value={{app.app_id}} class="flat" data-parsley-mincheck="1" checked/> {{app.app_name}}
+                              <br />
+                            {% else %}
+                              <input type="checkbox" name="apps" value={{app.app_id}} class="flat" data-parsley-mincheck="1" /> {{app.app_name}}
+                              <br />
+                            {% endif %}
+
+                            {% for approle in approles %}
+                              {% if approle.app_id.app_id == app.app_id %}
+                                <input type="checkbox" name="apps_role" value={{approle.app_role_id}} data-parsley-mincheck="1" /> {{approle.role_name}}
+                              {% endif %}
+                            {% endfor %}
+
+                          {% endfor %} 
+                        </p>
+
+
+                        <p style="padding: 5px;">
+                          {% for app in apps %}
+                            <input type="checkbox" name="apps" value={{app.app_id}} data-parsley-mincheck="1" /> {{app.app_name}}
+                            
+                            {% for approle in approles %}
+                              {% if approle.app_id.app_id == app.app_id %}
+                                <input type="checkbox" name="apps_role" value={{approle.app_role_id}} data-parsley-mincheck="1" /> {{approle.role_name}}
+                              {% endif %}
+                            {% endfor %}
+                            <br />
+                          {% endfor %} 
+                        </p>
+
+                        </div>

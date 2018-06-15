@@ -1,0 +1,107 @@
+{% extends "userapp/base_site.html" %}
+
+{% block title %} Export Payment Request {% endblock title %}
+
+{% block content %}
+
+<div class="right_col" role="main">
+	<div class="">
+		</div>
+		<div class="clearfix"></div>
+
+		<div class="row">
+			<div class="col-md-12 col-sm-12 col-xs-12">
+				<div class="x_panel">
+					<div class="x_content">
+
+						<form class="form-group form-label-left" method="POST" action="{% url 'export_payment_form' %}" id="paymentExportForm" novalidate>{% csrf_token %}
+
+							<span class="section">Export Payment Request</span>
+							<div class="item form-group col-md-6 col-sm-12 col-xs-12">
+								<label for="date" class="control-label col-md-4 col-sm-3 col-xs-12">Date From<span class="required">*</span>
+								</label >
+								<div class="col-md-6 col-sm-6 col-xs-12 ">
+									<input id="payment_date_from" type="date" name="payment_date_from"  value = "{{ date_from }}" class="form-control col-md-7 col-xs-12"  required="required">
+								</div>
+							</div>
+							<div class="item form-group col-md-6 col-sm-12 col-xs-12">
+								<label for="date" class="control-label col-md-4 col-sm-3 col-xs-12">Date To<span class="required">*</span>
+								</label >
+								<div class="col-md-6 col-sm-6 col-xs-12 ">
+									<input id="payment_date_to" type="date" name="payment_date_to"  class="form-control col-md-7 col-xs-12"  required="required">
+								</div>
+<!-- 	                           <label class="control-label col-md-4 col-sm-3 col-xs-12">Status :
+	                           </label>
+	                           <div class="col-md-8 col-sm-6 col-xs-12">
+	                              <select class="form-control col-md-7 col-xs-12" name="apv_sel" id="apv_sel" >
+									  <option value="all">All</option>
+									  <option value="aprov">Approved</option>
+	                              </select>
+	                           </div> -->
+							</div>
+							<div class="item form-group col-md-6 col-sm-12 col-xs-12 "></div>
+							<div class="item form-group col-md-6 col-sm-12 col-xs-12 ">
+									<div class="col-md-12 col-sm-12 col-xs-12 ">
+                                      {% if date_from  %}
+		                              <a href="{% url 'export_csv' date_from date_to %}" id="exp" name="exp" class="btn btn-primary pull-right">Export CSV</a>
+		                              {% endif %}
+							           <button type="submit" class="btn btn-primary pull-right" form="paymentExportForm"> Search </button>
+										<button type="reset" class="btn btn-default pull-right">Reset</button>
+									</div>
+								</div>
+
+							<p>
+							<table id="payment_request" class="display" style="width:100%">
+							    <thead>
+							        <th>Date</th>
+							        <th>Branch Name</th>
+							        <th>Head Of Accounts</th>
+							        <th>Narration / Nature of Expenses</th>
+							        <th>Department / Cost Centre</th>
+							        <th>Invoice Number</th>
+							        <th>Date</th>
+							        <th>Amount</th>
+							        <th>NAME OF THE PARTY</th>
+							        <th>NAME OF BANK</th>
+							        <th>BANK A/C NO</th>
+							        <th>IFSC CODE</th>
+							        <th>GL Code</th>
+							        <th>GL Description</th>
+							    </thead>
+							    <tbody>
+							    {% for row in payment_request %} 
+							    <tr>
+							        <td>{{ row.payment_date }}</td>
+							        <td>{{ row.branch_name.br_name }}</td>
+							        <td>{{ row.head_of_accounts.name }}</td>
+							        <td>{{ row.nature_of_expenses }}</td>
+							        <td>{{ row.dept_name.desg_name }}</td>
+							        <td>{{ row.invoice_number }}</td>
+							        <td>{{ row.payment_date }}</td>
+							        <td>{{ row.amount }}</td>
+							        <td>{{ row.name_of_party }}</td>
+							        <td>{{ row.name_of_bank }}</td>
+							        <td>{{ row.bank_acc_no }}</td>
+							        <td>{{ row.ifsc_code }}</td>
+							        <td>{{ row.gl_code }}</td>
+							        <td>{{ row.gl_desc }}</td>
+							    </tr>
+							    {% endfor %}  
+							    </tbody>
+							 </table>
+							</p>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+{% endblock content %}
+
+{% block javascripts %}
+	{{ block.super }}
+	<!-- validator -->
+	<script src="/static/vendors/validator/validator.js"></script>
+	
+{% endblock javascripts %}

@@ -1,0 +1,109 @@
+{% load staticfiles %}
+{% load my_temp_tags %}
+<div class="left_col scroll-view">
+  <div class="navbar nav_title" style="border: 0;">
+    <a href="index.html" class="site_title"><img src="/static/images/logo.png" alt="..." class="img "></a>
+  </div>
+
+  <div class="clearfix"></div>
+
+  <!-- menu profile quick info -->
+  <div class="profile clearfix">
+    <div class="profile_pic">
+      <img src="/static/images/user.png" alt="..." class="img-circle profile_img">
+    </div>
+    <div class="profile_info">
+      <span>Welcome,</span>
+      <h2>{% if user.is_authenticated %} {{user.get_full_name}} {% else%} {{user.username}} {% endif %}</h2>
+    </div>
+  </div>
+  <!-- /menu profile quick info -->
+
+  <br />
+
+  <!-- sidebar menu -->
+  <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
+    
+    <div class="menu_section">
+      <a href="{% url 'index' %}"><h3>Home</h3></a>
+      <ul class="nav side-menu">
+
+<!--              <li><a>Employee<span class="fa fa-chevron-down"></span></a>
+                <ul class="nav child_menu">
+                  <li><a href="{% url 'add_employee' %}">Add User</a>
+                  </li>
+                  <li><a href="{% url 'index' %}">Search & Edit</a>
+                  </li> -->
+                <!--   <li><a href="#">Edit User</a>
+                  </li>
+                  <li><a href="#">Exit User</a>
+                  </li> -->
+<!--                 </ul>
+              </li> -->
+
+<!-- 
+               <li><a>Application Account Details<span class="fa fa-chevron-down"></span></a>
+                <ul class="nav child_menu">
+                  <li><a href="{% url 'app_account_list' %}">View App Account Details</a>
+                  </li> -->
+                  <!-- <li class="sub_menu"><a href="#">Add </a>
+                  </li>
+                  
+                  <li><a href="#">Edit</a>
+                  </li>
+                  <li><a href="#">Exit</a>
+                  </li> -->
+<!--                 </ul>
+              </li> -->
+               
+             
+
+<!--                <li><a>User Attendance<span class="fa fa-chevron-down"></span></a>
+                <ul class="nav child_menu">
+                  <li><a>Holiday Master<span class="fa fa-chevron-down"></span></a>
+                  <ul class="nav child_menu">
+                    <li><a href="{% url 'add_holiday' %}">Add Holiday</a>
+                    <li><a href="{% url 'list_holiday_index' %}">List Holidays</a>
+                    <li><a href="{% url 'add_holiday_type' %}">Add Holiday Type</a>
+                  </ul>
+                  </li>
+
+                  <li><a>Leave Application<span class="fa fa-chevron-down"></span></a>
+                    <ul class="nav child_menu">
+                      <li><a href="{% url 'leave_application' %}">Leave Application Form</a>
+                      <li><a href="{% url 'leave_application_list' %}">Leave Application List</a>
+                      <li><a href="{% url 'add_leave_type' %}">Add Leave Type</a>
+                      <li><a href="{% url 'view_balanced_leave' %}">User's Balanced Leave Report</a>
+                    </ul>
+                  </li>
+                 <li><a href="{% url 'leave_index' %}">View Attendance Report</a>
+                  </li>
+                </ul>
+              </li> -->
+               <li><a>Payment Request Form<span class="fa fa-chevron-down"></span></a>
+                <ul class="nav child_menu">
+                  <li><a href="{% url 'payment_request' %}">Create Payment Request Form</a>
+                  </li>
+                  <li><a href="{% url 'export_payment_request' %}">Export Payment Request</a>
+                  </li>
+                  <li><a href="{% url 'upload_ack' %}">Upload Acknowledgement</a>
+                  </li>
+                  <!-- <li class="sub_menu"><a href="#">Add </a>
+                  </li>
+                  
+                  <li><a href="#">Edit</a>
+                  </li>
+                  <li><a href="#">Exit</a>
+                  </li> -->
+                </ul>
+              </li>             
+        <!-- </li> -->
+        <!-- <li><a href="javascript:void(0)"><i class="fa fa-laptop"></i> Landing Page <span class="label label-success pull-right">Coming Soon</span></a></li> -->
+      </ul>
+    </div>
+  </div>
+  <!-- /sidebar menu -->
+
+  <!-- /menu footer buttons -->
+  
+</div>

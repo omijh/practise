@@ -1,0 +1,383 @@
+
+<!-- template to show employee details to Branch Manager -->
+
+{% extends "userapp/base_site.html" %} {% block title %} Form Validation {% endblock title %} {% block container_body %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="google-form-master/google-form.js"></script>
+<div class="right_col" role="main">
+    <div class="">
+        <div class="page-title">
+            <div class="title_center">
+                <h3> {{emp_app.app_name}} app approval form</h3>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+
+        <div class="row">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
+                    <div class="x_content">
+
+                        <form class="form-group form-label-left" id="approvalForm" method="POST" action="{% url 'save_dsp_access_detail' emp_app_detail.id %}">{% csrf_token %}
+
+                          <!--   <form class="form-horizontal form-label-left"> -->
+                            <div class="row">
+                                <div class="item form-group col-md-4 col-sm-3 col-xs-12">
+                                    <label class="control-label col-md-4 col-sm-3 col-xs-12">Request ID
+                                    </label>
+                                    <div class="col-md-8 col-sm-6 col-xs-12">
+                                        <input type="text" value="{{emp.request_id.request_id}}" readonly class="form-control col-md-7 col-xs-12" name="request_id">
+                                    </div>
+                                </div>
+
+                                <div class="item form-group col-md-4 col-sm-3 col-xs-12">
+                                    <label class="control-label col-md-4 col-sm-3 col-xs-12">Emp Code
+                                    </label>
+                                    <div class="col-md-8 col-sm-6 col-xs-12">
+                                        <input type="text" value="{{emp.emp_code}}" readonly class="form-control col-md-7 col-xs-12" name="emp_code">
+                                    </div>
+                                </div>
+
+                                 <input type="text" value={{emp.emp_code}} hidden name="emp_code">
+                                     <input type="text" value="{{manager}}" name = 'manager' hidden readonly >
+
+                                <div class="item form-group col-md-4 col-sm-3 col-xs-12 ">
+                                    <label class="control-label col-md-4 col-sm-3 col-xs-12">First Name
+                                    </label>
+                                    <div class="col-md-8 col-sm-6 col-xs-12">
+                                        <input type="text" value="{{emp.emp_fname}}" readonly class="form-control col-md-7 col-xs-12">
+                                    </div>
+                                </div>
+
+                                <div class="item form-group col-md-4 col-sm-3 col-xs-12 ">
+                                    <label class="control-label col-md-4 col-sm-3 col-xs-12">Last Name
+                                    </label>
+                                    <div class="col-md-8 col-sm-6 col-xs-12">
+                                        <input type="text" value="{{emp.emp_lname}}" readonly class="form-control col-md-7 col-xs-12">
+                                    </div>
+                                </div>
+
+                                 <div class="item form-group col-md-4 col-sm-3 col-xs-12 ">
+                                    <label class="control-label col-md-4 col-sm-3 col-xs-12">Date of Birth
+                                    </label>
+                                    <div class="col-md-8 col-sm-6 col-xs-12">
+                                        <input type="text" value="{{emp.emp_dob|date:" d-m-Y "}}" readonly class="form-control col-md-7 col-xs-12">
+                                    </div>
+                                </div>
+
+                                <div class="item form-group col-md-4 col-sm-3 col-xs-12">
+                                    <label class="control-label col-md-4 col-sm-3 col-xs-12">Personal Email ID
+                                    </label>
+                                    <div class="col-md-8 col-sm-6 col-xs-12">
+                                        <input type="email" value="{{emp.emp_email}}" readonly class="form-control col-md-7 col-xs-12">
+                                    </div>
+                                </div>
+
+                                <div class="item form-group col-md-4 col-sm-3 col-xs-12">
+                                    <label class="control-label col-md-4 col-sm-3 col-xs-12">Mobile No.
+                                    </label>
+                                    <div class="col-md-8 col-sm-6 col-xs-12">
+                                        <input type="text" value="{{emp.emp_mobile}}" readonly class="form-control col-md-7 col-xs-12">
+                                    </div>
+                                </div>
+
+                                <div class="item form-group col-md-4 col-sm-3 col-xs-12">
+                                    <label class="control-label col-md-4 col-sm-3 col-xs-12">Address
+                                    </label>
+                                    <div class="col-md-8 col-sm-6 col-xs-12">
+                                        <input type="text" value="{{emp.emp_address}}" readonly class="form-control col-md-7 col-xs-12">
+                                    </div>
+                                </div>
+
+                               
+                                <div class="item form-group col-md-4 col-sm-3 col-xs-12">
+                                    <label class="control-label col-md-4 col-sm-3 col-xs-12">{{location_type|lower|capfirst}}
+                                    </label>
+                                    <div class="col-md-8 col-sm-6 col-xs-12">
+                                        <input type="text" value="{{location_name}}" readonly class="form-control col-md-7 col-xs-12">
+                                    </div>
+                                </div>
+
+                               <!--  <div class="item form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Location
+                                    </label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        <input type="text" value="{{location}}" readonly class="form-control col-md-7 col-xs-12">
+                                    </div>
+                                </div> -->
+
+                                <div class="item form-group col-md-4 col-sm-3 col-xs-12">
+                                    <label class="control-label col-md-4 col-sm-3 col-xs-12">Division
+                                    </label>
+                                    <div class="col-md-8 col-sm-6 col-xs-12">
+                                        <input type="text" value="{{emp.emp_desg.desg_name}}" readonly class="form-control col-md-7 col-xs-12">
+                                    </div>
+                                </div>
+
+                               <!--  <div class="item form-group col-md-4 col-sm-3 col-xs-12">
+                                    <label class="control-label col-md-4 col-sm-3 col-xs-12">Sales Manager
+                                    </label>
+                                    <div class="col-md-8 col-sm-6 col-xs-12">
+                                        <input type="text" value="{{emp.date_of_joining|date:" d-m-Y "}}" readonly class="form-control col-md-7 col-xs-12">
+                                    </div>
+                                </div>
+
+                                 <div class="item form-group col-md-4 col-sm-3 col-xs-12">
+                                    <label class="control-label col-md-4 col-sm-3 col-xs-12">Sales Manager Email
+                                    </label>
+                                    <div class="col-md-8 col-sm-6 col-xs-12">
+                                        <input type="text" value="{{emp.reporting_authority}}" name = 'manager' readonly class="form-control ">
+                                    </div>
+                                </div> -->
+                         
+                            </div>
+                             <span class="section">New User ID Request</span>
+                             <div class="row">
+
+
+
+                                  <div class="item form-group col-md-6 col-sm-3 col-xs-12">
+                                    <label class="control-label col-md-4 col-sm-3 col-xs-12">Sales Manager
+                                    </label>
+                                    <div class="col-md-4 col-sm-6 col-xs-12">
+                                        <input type="text" value="" d-m-Y "}}" name="sales_manager" class="form-control col-md-7 col-xs-12">
+                                    </div>
+                                </div>
+
+                                 <div class="item form-group col-md-6 col-sm-3 col-xs-12">
+                                    <label class="control-label col-md-4 col-sm-3 col-xs-12">Sales Manager Email
+                                    </label>
+                                    <div class="col-md-4 col-sm-6 col-xs-12">
+                                        <input type="text" value="" name = 'sales_manager_email'  class="form-control ">
+                                    </div>
+                                </div>
+
+
+                                <div class="item form-group col-md-6 col-sm-3 col-xs-12">
+                                    <label class="control-label col-md-4 col-sm-3 col-xs-12">Business Manager 
+                                    </label>
+                                    <div class="col-md-4 col-sm-6 col-xs-12">
+                                        <input type="text" value=""  class="form-control col-md-7 col-xs-12">
+                                        <input type="hidden" name="business_manager" value="">
+                                    </div>
+                                </div>
+
+
+                                <div class="item form-group col-md-6 col-sm-3 col-xs-12">
+                                    <label class="control-label col-md-4 col-sm-3 col-xs-12">Business Manager Email
+                                    </label>
+                                    <div class="col-md-4 col-sm-6 col-xs-12">
+                                        <input type="text" value=""  class="form-control col-md-7 col-xs-12" name="business_manager_email">
+                                    </div>
+                                </div>
+
+
+                                <div class="item form-group col-md-6 col-sm-3 col-xs-12">
+                                    <label class="control-label col-md-4 col-sm-3 col-xs-12">Division
+                                    </label>
+                                    <div class="col-md-4 col-sm-6 col-xs-12">
+                                        <input type="text" value="" name = 'division'  class="form-control ">
+                                    </div>
+                                </div>
+
+
+
+                                 </div>
+
+<!-- <div class="col-md-4 col-md-offset-4"> -->
+      
+    
+                                <div class="col-md-12 col-sm-3 col-xs-12">
+
+                                     <button type="submit" class="btn btn-primary  pull-right">Submit</button>
+                                   
+                                     <button type="button" class="btn btn-default pull-right" data-dismiss="modal">Cancel</button>
+                                     
+                                </div>
+
+                          
+                            
+                       <!--  </div> -->
+
+                <!--   Model box for App Request access -->
+
+<!--  End Model box for App Request access -->
+
+                </form>
+
+
+
+              <!--   <form method="POST" action="{% url 'approve_employee' %}">{% csrf_token %}
+                    <input type="text" value={{emp.emp_code}} hidden name="emp_code">
+                    <input type="text" value="{{manager}}" name = 'manager' hidden readonly >
+                    <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true">
+                        <div class="modal-dialog modal-sg">
+                            <div class="modal-content ">
+
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
+                                    </button>
+                                    <h4 class="modal-title" id="myModalLabel">App List</h4>
+                                </div>
+
+                                <div class="modal-body ">
+
+                                    <h4>Please Select apps to be assigned to Employee:</h4> 
+                                   
+                                    <div style="width:100%;" class="row form-group ">
+                                        <div class="form-check-inline form-check ">
+                                          {% for app in apps %}
+                                              <div style="width:50%;" class="item form-group col-md-6 col-sm-6 col-xs-12">
+
+                                                  {% if app.app_name == 'Gmail' %}
+
+                                                    <input type="checkbox" disabled name="apps" id={{app.app_name}} class="apps  col-md-1 col-sm-6 col-xs-12" data-parsley-mincheck="1" checked="1" /> 
+                                                    <label class="control-label col-md-7 col-sm-6 col-xs-12">{{app.app_name}}</label> 
+
+                                                    {% else %}
+
+                                                    <input type="checkbox" name="apps " id="{{app.app_name}}" onchange="showValue('{{app.app_name}}')" class="apps col-md-1 col-sm-6 col-xs-12" data-parsley-mincheck="1" /> 
+
+                                                     <label class="control-label col-md-7 col-sm-6 col-xs-12">{{app.app_name}}</label> 
+
+                                                  {% endif %}
+
+                                              </div>
+                                               <div style="width:50%;" class="item form-group col-md-4 col-sm-6 col-xs-12"> -->
+                                                  <!-- <label for="app_admin" class="form-check-label">Role :</label> -->
+                                                 <!--  {% if app.app_name == 'Gmail' %}
+
+                                                    <select class="form-control col-md-6 col-sm-6 col-xs-12" name="apps_role">
+                                                        
+                                                        {% for approle in approles %} 
+                                                        {% if approle.app_id.id == app.id %}
+                                                        <option value={{ approle.id }} >{{approle.role_name}}</option>
+                                                        {% endif %} 
+                                                        {% endfor %}
+                                                    </select> 
+                                                  {% else %}
+                                                    <select  class="form-control col-md-6 col-sm-6 col-xs-12" id='{{app.app_name}}_s' name="apps_role" disabled required>
+                                                        <option value="">None</option>
+                                                        {% for approle in approles %} 
+                                                        {% if approle.app_id.id == app.id %}
+                                                        <option value={{ approle.id }} >{{approle.role_name}}</option>
+                                                        {% endif %} 
+                                                        {% endfor %}
+                                                    </select>
+                                                  {% endif %}
+                                              </div>
+                                          {% endfor %}
+                                            <button type="submit" class="btn btn-primary  pull-right">Submit</button>
+                                            <button type="button" class="btn btn-default pull-right" data-dismiss="modal">Close</button>
+                                   
+                                        </div>
+
+                                    </div>
+                                    
+
+                                </div>
+
+                                <script type="text/javascript">
+                                    function showValue(target)
+                                    {
+                                      var val_2 = ''
+                                      if (target) {
+                                        chk = document.getElementById(target)
+                                        if (chk.checked == true) {
+                                          val_2 = '_s'
+                                          val = target.concat(val_2)
+                                          select_id = document.getElementById(val).disabled = false;
+                                        }
+                                        else{
+                                          val_2 = '_s'
+                                          val = target.concat(val_2)
+                                          select_id = document.getElementById(val).disabled = true;
+                                        }
+                                      }
+                                        else
+                                           alert('Something went wrong');
+                                    }
+                                </script>
+
+                                <div class="modal-footer">
+                                   
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form> -->
+                <!-- end large modal -->
+                <!-- Small modal start-->
+
+                <form method="POST" action="{% url 'reject_employee' %}">{% csrf_token %}
+                    <input type="text" value={{emp.emp_code}} hidden name="emp_code">
+                    <input type="text" value="{{manager}}" hidden name = 'manager' readonly>
+                    <div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-hidden="true">
+                        <div class="modal-dialog modal-sm">
+                            <div class="modal-content">
+
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
+                                    </button>
+                                    <h4 class="modal-title" id="myModalLabel2">Reject Employee</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <h4>Please Enter the reason for rejection</h4>
+                                    <input type="text" class="form-control" placeholder="Enter the reason..." name='reason' required>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <!-- end small modal -->
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+</div>
+
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<!-- <script>
+
+
+        $("#rqapp").click(function () {
+            // var url = $("#personForm").attr("data-dropdown-url");  // get the url of the `load_cities` view
+            // var region_id = $(this).val();  // get the selected country ID from the HTML input
+
+  
+                $('#the_div_id *').prop('disabled',true);
+        });
+
+</script> -->
+ <script type="text/javascript">
+        function showValue(target)
+        {
+          var val_2 = ''
+          if (target) {
+            chk = document.getElementById(target)
+            if (chk.checked == true) {
+              val_2 = '_s'
+              val = target.concat(val_2)
+              select_id = document.getElementById(val).disabled = false;
+            }
+            else{
+              val_2 = '_s'
+              val = target.concat(val_2)
+              select_id = document.getElementById(val).disabled = true;
+            }
+          }
+            else
+               alert('Something went wrong');
+        }
+    </script>
+
+{% endblock container_body %} {% block javascripts %} {{ block.super }}
+<!-- validator -->
+<script src="/static/vendors/validator/validator.js"></script>
+{% endblock javascripts %}

@@ -1,0 +1,644 @@
+
+
+
+<!-- template to add a new employee -->
+
+{% extends "userapp/base_site.html" %}
+
+{% block title %} Form Validation {% endblock title %}
+
+{% block content %}
+	<div class="right_col" role="main">
+		<div class="">
+
+			</div>
+			<div class="clearfix"></div>
+
+			<div class="row">
+				<div class="col-md-11 col-sm-12 col-xs-12">
+					<div class="x_panel">
+						<div class="x_content">
+
+							<form class="form-group form-label-left" method="POST" enctype="multipart/form-data" action="{% url 'save_payment_form' %}" id="paymentForm" data-dropdown-url="{% url 'ajax_load_branch' %}" novalidate>{% csrf_token %}
+
+								<span class="section">Vendor Payment Form :</span>
+
+								<div class="item form-group col-md-6 col-sm-12 col-xs-12">
+									<label class="control-label col-md-4 col-sm-3 col-xs-12">Branch <span class="required">*</span></label>
+									<div class="col-md-6 col-sm-6 col-xs-12">
+										<select class="form-control col-md-7 col-xs-12" name="branch_name" id="branch_name" required>
+											<option selected value=""></option>
+											{% for branch in branch_name %}
+											<option value="{{ branch.id }}">{{ branch.br_name }}</option>
+										 {% endfor %}
+										</select>
+									</div>
+								</div>
+								<div class="item form-group col-md-20 col-sm-12 col-xs-12">
+								</div>
+								<div class="item form-group col-md-6 col-sm-12 col-xs-12">
+									<label class="control-label col-md-4 col-sm-3 col-xs-12">Function: <span class="required">*</span></label>
+									<div class="col-md-6 col-sm-6 col-xs-12">
+										<select class="form-control col-md-7 col-xs-12" name="dept_name" id="dept_name" required>
+											{% for dept in dept_name %}
+											<option selected value="{{ dept.id }}">{{ dept.desg_name }}</option>
+										 {% endfor %}
+										</select>
+									</div>
+								</div>
+								<div class="item form-group col-md-20 col-sm-12 col-xs-12">
+								</div>
+								<div class="item form-group col-md-6 col-sm-12 col-xs-12">
+									<label class="control-label col-md-4 col-sm-3 col-xs-12">Head Of Accounts <span class="required">*</span></label>
+									<div class="col-md-6 col-sm-6 col-xs-12">
+										<select class="form-control col-md-7 col-xs-12" name="head_of_accounts" id="head_of_accounts" required>
+											<option selected value="">None</option>
+											{% for item in head_of_accounts %}
+											<option value="{{ item.id }}">{{ item.name }}</option>
+										 {% endfor %}
+										</select>
+									</div>
+								</div>
+								<div class="item form-group col-md-20 col-sm-12 col-xs-12">
+								</div>
+								<div class="item form-group col-md-6 col-sm-12 col-xs-12">
+									<label for="gl_code" class="control-label col-md-4 col-sm-3 col-xs-12">GL Code: 
+									</label >
+									<div class="col-md-6 col-sm-6 col-xs-12 ">
+										<select class="form-control col-md-7 col-xs-12" name="gl_code" id="gl_code" readonly>
+												<option  value=""  >None</option> 
+									
+										</select>
+									</div>
+								</div>
+								<div class="item form-group col-md-6 col-sm-12 col-xs-12">
+									<label for="gl_desc" class="control-label col-md-4 col-sm-3 col-xs-12">GL Description:
+									</label >
+									<div class="col-md-6 col-sm-6 col-xs-12 ">
+										<select class="form-control col-md-7 col-xs-12" name="gl_desc" id="gl_desc" readonly>
+												<option  value=""  >None</option> 
+									
+										</select>
+									</div>
+								</div>
+								<div class="item form-group col-md-20 col-sm-12 col-xs-12">
+								</div>
+								<div class="item form-group col-md-6 col-sm-12 col-xs-12">
+									<label class="control-label col-md-4 col-sm-3 col-xs-12" for="nature_of_expenses">Nature of Expenses <span class="required">*</span>
+									</label>
+									<div class="col-md-6 col-sm-6 col-xs-12">
+										<input type="text" id="nature_of_expenses" name="nature_of_expenses"  class="form-control col-md-7 col-xs-12" required="required" data-validate-length-range="2,20" onkeypress="return AvoidSpace(event)">
+									</div>
+								</div>
+								<div class="item form-group col-md-20 col-sm-12 col-xs-12">
+								</div>
+								<div class="item form-group col-md-6 col-sm-12 col-xs-12">
+									<label for="division" class="control-label col-md-4 col-sm-3 col-xs-12">Division
+									</label >
+									<div class="col-md-6 col-sm-6 col-xs-12 ">
+										<select class="form-control col-md-7 col-xs-12" name="division" id="division">
+												<option  value=""  >None</option> 
+									
+										</select>
+									</div>
+								</div>
+								<div class="item form-group col-md-6 col-sm-12 col-xs-12">
+									<label for="region" class="control-label col-md-4 col-sm-3 col-xs-12">Region
+									</label >
+									<div class="col-md-6 col-sm-6 col-xs-12 ">
+										<select class="form-control col-md-7 col-xs-12" name="region" id="region">
+												<option  value=""  >None</option> 
+									
+										</select>
+									</div>
+								</div>
+								<div class="item form-group col-md-20 col-sm-12 col-xs-12">
+								</div>
+								<div class="item form-group col-md-6 col-sm-12 col-xs-12">
+									<label for="invoice_number" class="control-label col-md-4 col-sm-3 col-xs-12">Invoice Number<span class="required">*</span>
+									</label >
+									<div class="col-md-6 col-sm-6 col-xs-12 ">
+										<input id="invoice_number" type="text" name="invoice_number"  class="form-control col-md-7 col-xs-12"  required="required">
+									</div>
+								</div>
+								<div class="item form-group col-md-6 col-sm-12 col-xs-12">
+									<label for="date" class="control-label col-md-4 col-sm-3 col-xs-12">Invoice Date<span class="required">*</span>
+									</label >
+									<div class="col-md-6 col-sm-6 col-xs-12 ">
+										<input id="payment_date" type="date" name="payment_date" value="{{placement.date|date:"Y-m-d" }}" class="form-control col-md-7 col-xs-12"  required="required">
+									</div>
+								</div>
+								<div class="item form-group col-md-20 col-sm-12 col-xs-12">
+								</div>
+								<div class="item form-group col-md-6 col-sm-12 col-xs-12">
+									<label for="amount" class="control-label col-md-4 col-sm-3 col-xs-12">Amount: <span class="required">*</span>
+									</label >
+									<div class="col-md-6 col-sm-6 col-xs-12 ">
+										<input id="amount" type="number" step="any" name="amount"  class="form-control col-md-7 col-xs-12"  required="required">
+									</div>
+								</div>
+								<div class="item form-group col-md-20 col-sm-12 col-xs-12">
+								</div>
+								<div class="item form-group col-md-6 col-sm-12 col-xs-12">
+									<label for="name_of_party" class="control-label col-md-4 col-sm-3 col-xs-12">Vendor Name<span class="required">*</span>
+									</label >
+									<div class="col-md-6 col-sm-6 col-xs-12 ">
+										<input id="name_of_party" type="text" name="name_of_party"  class="form-control col-md-7 col-xs-12"  required="required">
+									</div>
+								</div>
+								<div class="item form-group col-md-20 col-sm-12 col-xs-12">
+								</div>
+								<div class="item form-group col-md-6 col-sm-12 col-xs-12">
+									<label for="name_of_bank" class="control-label col-md-4 col-sm-3 col-xs-12">Name of the Bank<span class="required">*</span>
+									</label >
+									<!-- <div class="col-md-6 col-sm-6 col-xs-12 ">
+										<input id="name_of_bank" type="text" name="name_of_bank"  class="form-control col-md-7 col-xs-12"  required="required">
+									</div> -->
+									<div class="col-md-6 col-sm-6 col-xs-12 ">
+										<select class="form-control col-md-7 col-xs-12" name="name_of_bank" id="name_of_bank">
+												<option selected  value=""  >None</option> 
+												<option  value="Allahabad Bank">Allahabad Bank</option>
+												<option  value="Andhra Bank">Andhra Bank</option>
+												<option  value="Axis Bank">Axis Bank</option>
+												<option  value="Bandhan Bank">Bandhan Bank</option>
+												<option  value="Bank of Baroda">Bank of Baroda</option>
+												<option  value="Bank of India">Bank of India</option>
+												<option  value="Bank of Maharashtra">Bank of Maharashtra</option>
+												<option  value="Canara Bank">Canara Bank</option>
+												<option  value="Catholic Syrian Bank">Catholic Syrian Bank</option>
+												<option  value="Central Bank of India">Central Bank of India</option>
+												<option  value="City Union Bank">City Union Bank</option>
+												<option  value="Corporation Bank">Corporation Bank</option>
+												<option  value="DCB Bank">DCB Bank</option>
+												<option  value="Dena Bank">Dena Bank</option>
+												<option  value="Dhanlaxmi Bank">Dhanlaxmi Bank</option>
+												<option  value="Federal Bank">Federal Bank</option>
+												<option  value="HDFC Bank">HDFC Bank</option>
+												<option  value="ICICI Bank">ICICI Bank</option>
+												<option  value="IDBI Bank">IDBI Bank</option>
+												<option  value="IDFC Bank">IDFC Bank</option>
+												<option  value="Indian Bank">Indian Bank</option>
+												<option  value="Indian Overseas Bank">Indian Overseas Bank</option>
+												<option  value="IndusInd Bank">IndusInd Bank</option>
+												<option  value="Karnataka Bank">Karnataka Bank</option>
+												<option  value="Karur Vysya Bank">Karur Vysya Bank</option>
+												<option  value="Kotak Mahindra Bank">Kotak Mahindra Bank</option>
+												<option  value="Lakshmi Vilas Bank">Lakshmi Vilas Bank</option>
+												<option  value="Nainital Bank">Nainital Bank</option>
+												<option  value="Oriental Bank of Commerce">Oriental Bank of Commerce</option>
+												<option  value="Punjab National Bank">Punjab National Bank</option>
+												<option  value="Punjab and Sind Bank">Punjab and Sind Bank</option>
+												<option  value="RBL Bank">RBL Bank</option>
+												<option  value="South Indian Bank">South Indian Bank</option>
+												<option  value="State Bank of India">State Bank of India</option>
+												<option  value="Syndicate Bank">Syndicate Bank</option>
+												<option  value="Tamilnad Mercantile Bank Limited">Tamilnad Mercantile Bank Limited</option>
+												<option  value="U.P Agro Corporation Bank">U.P Agro Corporation Bank</option>
+												<option  value="UCO Bank">UCO Bank</option>
+												<option  value="Union Bank of India">Union Bank of India</option>
+												<option  value="United Bank of India">United Bank of India</option>
+												<option  value="Vijaya Bank">Vijaya Bank</option>
+												<option  value="Yes Bank">Yes Bank</option>
+										</select>
+									</div>
+								</div>
+								<div class="item form-group col-md-20 col-sm-12 col-xs-12">
+								</div>
+								<div class="item form-group col-md-6 col-sm-12 col-xs-12">
+									<label for="bank_acc_no" class="control-label col-md-4 col-sm-3 col-xs-12">Bank Account No: <span class="required">*</span>
+									</label >
+									<div class="col-md-6 col-sm-6 col-xs-12 ">
+										<input id="bank_acc_no" type="number"  max = "999999999999999"  onkeypress="return isNumeric(event)" oninput="maxLengthCheck(this)" name="bank_acc_no"  class="form-control col-md-7 col-xs-12"  required="required">
+									</div>
+								</div>
+								
+								<div class="item form-group col-md-6 col-sm-12 col-xs-12">
+									<label for="ifsc_code" class="control-label col-md-4 col-sm-3 col-xs-12">IFSC Code<span class="required">*</span>
+									</label >
+									<div class="col-md-6 col-sm-6 col-xs-12 ">
+										<input id="ifsc_code" type="text" name="ifsc_code" oninput="maxLengthCheck(this)" max="99999999999" class="form-control col-md-7 col-xs-12"  required="required">
+									</div>
+								</div>
+								<div class="item form-group col-md-20 col-sm-12 col-xs-12">
+								</div>
+								<div class="item form-group col-md-6 col-sm-12 col-xs-12">
+									<label class="control-label col-md-4 col-sm-3 col-xs-12" for="nature_of_expenses">File Upload<span class="required">*</span>
+									</label>
+									<div class="col-md-6 col-sm-6 col-xs-12">
+										<input type="file" id="document" name="document"  class="form-control col-md-7 col-xs-12" required="required">
+									</div>
+								</div>
+
+							<div class="item form-group col-md-6 col-sm-12 col-xs-12 "></div>
+							<div class="item form-group col-md-6 col-sm-12 col-xs-12 ">
+									<div class="col-md-12 col-sm-12 col-xs-12 ">										
+										<button type="button" class="btn btn-primary pull-right" data-toggle="modal" data-target=".bs-activate-modal-sm">Submit</button>
+										<a class="btn btn-default pull-right" href="{% url 'index' %}">Cancel</a>
+									</div>
+								</div>
+								<div class="modal fade bs-activate-modal-sm" tabindex="-1" role="dialog" aria-hidden="true">
+							     <div class="modal-dialog modal-sm">
+							       <div class="modal-content">
+
+							         <div class="modal-header">
+							           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
+							           </button>
+							           <h4 class="modal-title" id="myModalLabel2">Confirmation </h4>
+							         </div>
+							         <div class="modal-body">
+
+							           <p>Do you want to save the form ?</p>
+							          
+							         </div>
+							         <div class="modal-footer">
+							           <button type="button" class="btn btn-default" data-dismiss="modal">
+							           No </button>
+
+							           <button type="submit" class="btn btn-success" form="paymentForm" value="Submit">Yes</button>
+
+							         </div>
+
+							       </div>
+							     </div>
+							 </div>
+
+
+							 {% if message == 'Success' %}
+							<div class="modal fade" id = "onload" tabindex="-1" role="dialog" aria-hidden="true">
+							     <div class="modal-dialog modal-sm">
+							       <div class="modal-content">
+
+							         <div class="modal-header">
+							           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
+							           </button>
+							           <h4 class="modal-title" id="myModalLabe">Confirmation </h4>
+							         </div>
+							         <div class="modal-body">
+
+							           <p>Submit Successful</p>
+							          
+							         </div>
+							         <div class="modal-footer">
+							           <button type="button" type="reset" class="btn btn-default" data-dismiss="modal">
+							           Ok </button>
+							         </div>
+							       </div>
+							     </div>
+							     {% endif %}
+							 {% if message == 'Fail' %}
+							<div class="modal fade" id = "onload2" tabindex="-1" role="dialog" aria-hidden="true">
+							     <div class="modal-dialog modal-sm">
+							       <div class="modal-content">
+
+							         <div class="modal-header">
+							           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
+							           </button>
+							           <h4 class="modal-title" id="myModalLabe">Confirmation </h4>
+							         </div>
+							         <div class="modal-body">
+
+							           <p>Submit Failed</p>
+							          
+							         </div>
+							         <div class="modal-footer">
+							           <button type="button" type="reset" class="btn btn-default" data-dismiss="modal">
+							           Ok </button>
+							         </div>
+							       </div>
+							     </div>
+							     {% endif %}
+</div>
+</div>
+</form>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+
+<!-- for type & search dropdown -->
+<!-- start -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+<script type="text/javascript">
+	  function maxLengthCheck(object) {
+    if (object.value.length > object.max.length)
+      object.value = object.value.slice(0, object.max.length)
+  }
+    
+  function isNumeric (evt) {
+    var theEvent = evt || window.event;
+    var key = theEvent.keyCode || theEvent.which;
+    key = String.fromCharCode (key);
+    var regex = /[0-9]|\./;
+    if ( !regex.test(key) ) {
+      theEvent.returnValue = false;
+      if(theEvent.preventDefault) theEvent.preventDefault();
+    }
+  }
+</script>
+<script type="text/javascript">
+var now = new Date();
+
+var day = ("0" + now.getDate()).slice(-2);
+var month = ("0" + (now.getMonth() + 1)).slice(-2);
+
+var today = now.getFullYear()+"-"+(month)+"-"+(day) ;
+
+$('#payment_date').val(today);	
+
+</script>
+<script type="text/javascript">
+	$(document).ready(function() {
+            $('#onload').modal('show');
+            $('#onload2').modal('show');
+});
+</script>
+<script >
+	$(document).ready(function() {
+    $('#designation').select2();
+});
+</script>
+
+<script>
+
+		$("#branch_name").change(function () {
+		
+		var branch_id = $(this).val();
+		
+		var url = $("#paymentForm").attr("data-dropdown-url");
+
+		$("#division").html("<option value=''>None</option>");
+		$("#region").html("<option value=''>None</option>");
+
+			$.ajax({                       // initialize an AJAX request
+					url: url,                    // set the url of the request (= localhost:8000/hr/ajax/load-cities/)
+					data: {
+						'data_id': branch_id,
+						'type' : 'branch_list'       // add the branch id to the GET parameters
+					},
+					success: function (data) {   // `data` is the return of the `load_cities` view 
+
+
+						$("#division").html(" <option value="+ data.division.id+">"+data.division.name+"</option> ");
+						$("#region").html(" <option value="+ data.region.id+">"+data.region.name+"</option> ");
+							
+					}
+				});
+		});
+		$("#head_of_accounts").change(function () {
+		
+		var head_id = $(this).val();
+		
+		var url = $("#paymentForm").attr("data-dropdown-url");
+		$("#gl_code").html("<option value=''>None</option>");
+		$("#gl_desc").html("<option value=''>None</option>");
+
+			$.ajax({                       // initialize an AJAX request
+					url: url,                    // set the url of the request (= localhost:8000/hr/ajax/load-cities/)
+					data: {
+						'data_id': head_id,
+						'type' : 'head_list'       // add the branch id to the GET parameters
+					},
+					success: function (data) {   // `data` is the return of the `load_cities` view 
+
+
+						$("#gl_code").html(" <option value="+ data.gl_code+">"+data.gl_code+"</option> ");
+						$("#gl_desc").html(" <option value="+ data.gl_desc+">"+data.gl_desc+"</option> ");
+							
+					}
+				});
+		});
+</script>
+
+<!-- <script >
+	$(document).ready(function() {
+    $('#vertical').select2();
+});
+</script>
+<script >
+	$(document).ready(function() {
+    $('#region').select2();
+});
+</script>
+<script >
+	$(document).ready(function() {
+    $('#division').select2();
+});
+</script>
+<script >
+	$(document).ready(function() {
+    $('#branch').select2();
+});
+</script> -->
+<!-- end -->
+
+<!-- for emp code validation -->
+<!-- start -->
+<!-- <script>
+function AvoidSpace(event) {
+    var k = event ? event.which : window.event.keyCode;
+    if (k == 32) return false;
+}
+</script>
+<script>
+    $("#emp_code").change(function () {
+      var emp_code = $(this).val();
+      console.log( $(this).val() );
+
+      $.ajax({
+        url: '/ajax/validate_emp_code/',
+        data: {
+          'emp_code': emp_code
+        },
+        dataType: 'json',
+        success: function (data) {
+          if (data.is_taken) {
+            alert("An Employee with this Emp Code already exists.");
+          }
+        }
+      });
+
+    });
+  </script>
+  <script>
+    $("#email_id").change(function () {
+      var email_id = $(this).val();
+      console.log( $(this).val() );
+
+      $.ajax({
+        url: '/ajax/validate_email_id/',
+        data: {
+          'email_id': email_id
+        },
+        dataType: 'json',
+        success: function (data) {
+          if (data.is_taken) {
+            alert("An Employee with this Personal Email ID Already Exists.");
+          }
+        }
+      });
+
+    });
+  </script> -->
+  <!-- end -->
+
+  <!-- for country ext -->
+<!-- start -->
+<!-- <script>
+	$('#country').select2();
+    $("#country").change(function () {
+      var country = $(this).val();
+      console.log( $(this).val() );
+
+      $.ajax({
+        url: '/ajax/select_country_ext/',
+        data: {
+          'country': country
+        },
+        dataType: 'json',
+        success: function (data) {
+          if (data.ext) {
+
+          	document.getElementById("ext").value = data.ext;
+            
+          }
+        }
+      });
+
+    });
+  </script> -->
+  <!-- end -->
+
+<!-- <script>
+	var today = new Date();
+	var dd = today.getDate();
+	var mm = today.getMonth()+1; //January is 0!
+	var yyyy = today.getFullYear();
+	if(dd<10){
+					dd='0'+dd
+			} 
+			if(mm<10){
+					mm='0'+mm
+			} 
+
+	today = yyyy+'-'+mm+'-'+dd;
+	document.getElementById("dob").setAttribute("max", today);
+</script> -->
+
+
+<!-- <script>
+		 $('#vertical').select2();
+		 $("#vertical").change(function () {
+			var url = $("#employeeForm").attr("data-dropdown-url");  
+			var vertical_id = $(this).val();  
+
+
+			if (vertical_id == 3) {
+
+					type ='branch'
+				}
+
+				else{
+
+					$("#vertical_div").removeClass('hidden');
+					$("#region_div").removeClass('hidden');
+					$("#division_div").removeClass('hidden');
+					$("#branch_div").removeClass('hidden');
+					type ='branch'
+				}
+
+				$("#division").html("<option value=''>None</option>");
+				$("#region").html("<option value=''>None</option>");
+
+			$.ajax({                       
+				url: url,                    
+				data: {
+					'data_id': vertical_id,
+					'type' : type     
+				},
+				success: function (data) {  
+					
+					if(vertical_id == 3){
+						 $("#branch").html(data);
+					}
+					else{
+
+					$("#branch").html(data);
+					
+					 } 
+				}
+			});
+
+		});
+		
+	
+	$('#branch').select2();
+	$("#branch").change(function () {
+		
+		var branch_id = $(this).val();
+		
+		var url = $("#employeeForm").attr("data-dropdown-url");
+
+			$.ajax({                       // initialize an AJAX request
+					url: url,                    // set the url of the request (= localhost:8000/hr/ajax/load-cities/)
+					data: {
+						'data_id': branch_id,
+						'type' : 'branch_list'       // add the branch id to the GET parameters
+					},
+					success: function (data) {   // `data` is the return of the `load_cities` view 
+
+
+						$("#division").html(" <option value="+ data.division.id+">"+data.division.name+"</option> ");
+						$("#region").html(" <option value="+ data.region.id+">"+data.region.name+"</option> ");
+							
+					}
+				});
+		});
+
+	$('#location').change( function() {
+		 var a = $(this).val();
+		
+		 if (a == 'vt') {
+				// $('#division_div').toggle();
+				$("#vertical_div").removeClass('hidden');
+				$("#region_div").addClass('hidden');
+				$("#division_div").addClass('hidden');
+				$("#branch_div").addClass('hidden');
+		 }
+		 if (a == 'rg') {
+			 $("#vertical_div").removeClass('hidden');
+				$("#region_div").removeClass('hidden');
+				$("#division_div").addClass('hidden');
+				$("#branch_div").addClass('hidden');
+		 } 
+		 if (a == 'dv') {
+				$("#vertical_div").removeClass('hidden');
+				$("#region_div").removeClass('hidden');
+				$("#division_div").removeClass('hidden');
+				$("#branch_div").addClass('hidden');
+		 } 
+		 if (a == 'br') {
+			 $("#vertical_div").removeClass('hidden');
+				$("#region_div").removeClass('hidden');
+				$("#division_div").removeClass('hidden');
+				$("#branch_div").removeClass('hidden');
+		 } 
+	});
+</script> -->
+
+	
+
+
+
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock content %}
+
+{% block javascripts %}
+	{{ block.super }}
+	<!-- validator -->
+	<script src="/static/vendors/validator/validator.js"></script>
+	
+{% endblock javascripts %}

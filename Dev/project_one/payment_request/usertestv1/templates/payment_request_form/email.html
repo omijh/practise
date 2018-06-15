@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Urgent Payment Request</title>
+</head>
+<body>
+
+<!-- <p>User {{ user }} from {{ branch_name }} branch requests an urgent payment of Rs. {{ amount }} for {{head_of_accounts}}</p> -->
+
+<p>User <b>{{ user }}</b> has requested an <b>Vendor Payment Request</b></p>
+
+<p>1. <b>Branch Name:</b> {{ branch_name }}</p>
+<p>2. <b>Function:</b> {{ designation }}</p>
+<p>3. <b>Head of Accounts:</b> {{head_of_accounts}}</p>
+<p>4. <b>Nature of Expenses:</b> {{ nature_of_expenses }}</p>
+<p>5. <b>Amount: Rs.</b> {{ amount }}</p>
+<p>6. <b>Vendor Name:</b> {{ name_of_party }}</p>
+
+<table>
+    <tr>
+        <td style="background-color: #4ecdc4;border-color: #4c5764;border: 2px solid #45b7af;padding: 10px;text-align: center;">
+            <a style="display: block;color: #ffffff;font-size: 12px;text-decoration: none;text-transform: uppercase;" href="{{ approval_url }}">
+                Approve
+            </a>
+        </td>
+ 		<td><p></p></td>
+        <td style="background-color: #4ecdc4;border-color: #4c5764;border: 2px solid #45b7af;padding: 10px;text-align: center;">
+	        <a style="display: block;color: #ffffff;font-size: 12px;text-decoration: none;text-transform: uppercase;" href="{{ deny_url }}">
+                Decline
+            </a>
+        </td>
+    </tr>
+</table>
+</body>
+</html>

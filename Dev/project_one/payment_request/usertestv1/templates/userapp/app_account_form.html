@@ -1,0 +1,259 @@
+<!-- template to add a new employee -->
+
+{% extends "userapp/base_site.html" %}
+
+{% block title %} Form Validation {% endblock title %}
+
+{% block content %}
+  <div class="right_col" role="main">
+    <div class="">
+      <div class="page-title">
+        <div class="title_left">
+          <h3>Details required for App Account</h3>
+        </div>
+      </div>
+      <div class="clearfix"></div>
+      <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+          <div class="x_panel">
+            <div class="x_content">
+
+              <form class="form-group" method="POST"  novalidate>{% csrf_token %}
+
+               <!-- Add Employee Details Form  -->
+                <span class="section">Employee data</span>
+
+                <div class="row">
+
+                <!-- <div class="item form-group col-md-4 col-xs-12">
+                  <label class="control-label col-md-4 col-sm-3 col-xs-12">Request Id
+                  </label>
+                  <div class="col-md-8 col-sm-6 col-xs-12">
+                    <input type="text" value="{{emp.request_id.request_id}}" readonly class="form-control col-md-7 col-xs-12">
+                  </div>
+                </div> -->
+
+                <div class="item form-group col-md-6 col-sm-3 col-xs-12">
+                  <label class="control-label col-md-4 col-sm-3 col-xs-12">Emp Code 
+                  </label>
+                  <div class="col-md-8 col-sm-6 col-xs-12">
+                    <input type="text" value="{{emp.emp_code}}" readonly class="form-control col-md-7 col-xs-12" name="emp_code">
+                  </div>
+                </div>
+
+                <div class="item form-group col-md-6 col-sm-3 col-xs-12">
+                  <label class="control-label col-md-4 col-sm-3 col-xs-12"> Name 
+                  </label>
+                  <div class="col-md-8 col-sm-6 col-xs-12">
+                    <input type="text" value="{{emp.emp_fname}}&nbsp;{{emp.emp_lname}}" readonly class="form-control col-md-7 col-xs-12" name="emp_first" >
+                  </div>
+                </div>
+
+                <div class="item form-group col-md-6 col-sm-3 col-xs-12">
+                  <label class="control-label col-md-4 col-sm-3 col-xs-12"> Personal Email ID 
+                  </label>
+                  <div class="col-md-8 col-sm-6 col-xs-12">
+                    <input type="email" value="{{emp.emp_email}}" readonly class="form-control col-md-7 col-xs-12" name="emp_email" >
+                  </div>
+                </div>
+
+                <div class="item form-group col-md-6 col-sm-3 col-xs-12">
+                  <label class="control-label col-md-4 col-sm-3 col-xs-12">Mobile No.
+                  </label>
+                  <div class="col-md-2 col-sm-2 col-xs-2">
+                    <input id="ext" name="ext" class="form-control col-md-7 col-xs-12"  value = "+{{emp.country_isd_code}}" type="text" readonly >
+                  </div>
+                  <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input type="text" value="{{emp.emp_mobile}}"  readonly class="form-control col-md-7 col-xs-12" name="emp_mobile" >
+                  </div>
+                </div>
+
+                <div class="item form-group col-md-6 col-sm-3 col-xs-12">
+                  <label class="control-label col-md-4 col-sm-3 col-xs-12">Country
+                  </label>
+                  <div class="col-md-8 col-sm-6 col-xs-12">
+                    <input type="text" value="{{emp.country.country_name}}" readonly class="form-control col-md-7 col-xs-12" name="country" >
+                  </div>
+                </div>
+
+
+                <div class="item form-group col-md-6 col-sm-3 col-xs-12">
+                  <label class="control-label col-md-4 col-sm-3 col-xs-12">Date of Joining
+                  </label>
+                  <div class="col-md-8 col-sm-6 col-xs-12">
+                    <input type="date" value={{emp.date_of_joining|date:"Y-m-d"}}  class="form-control col-md-7 col-xs-12" name="emp_doj" readonly >
+                  </div>
+                </div>
+
+
+                <div class="item form-group  col-md-6 col-sm-3 col-xs-12">
+                  <label class="control-label col-md-4 col-sm-3 col-xs-12">Designation 
+                  </label>
+                  <div class="col-md-8 col-sm-6 col-xs-12">
+                    <input type="text" value="{{ emp.emp_desg.desg_name }}"  class="form-control col-md-7 col-xs-12" name="designation" readonly >
+                  </div>
+                </div>
+
+
+
+                <div class="item form-group col-md-6 col-sm-3 col-xs-12 ">
+                  <label class="control-label col-md-4 col-sm-3 col-xs-12">Vertical
+                  </label>
+                  <div class="col-md-8 col-sm-6 col-xs-12">
+                     <input type="text" value="{{ vertical_id.vt_name }}"  class="form-control col-md-7 col-xs-12" name="vertical" readonly >
+                    
+                  
+                  </div>
+                </div>
+
+
+                <div class="item form-group col-md-6 col-sm-3 col-xs-12 ">
+                  <label class="control-label col-md-4 col-sm-3 col-xs-12">Region
+                  </label>
+                  <div class="col-md-8 col-sm-6 col-xs-12">
+                  
+                     <input type="text" value="{{ region_id.rg_name }}"  class="form-control col-md-7 col-xs-12" name="region" readonly >
+                    
+                  
+                  </div>
+                     
+                  </div>
+
+                <div class="item form-group col-md-6 col-sm-3 col-xs-12 ">
+                  <label class="control-label col-md-4 col-sm-3 col-xs-12">Division
+                  </label>
+                  <div class="col-md-8 col-sm-6 col-xs-12">
+
+                       <input type="text" value="{{ division_id.div_name}}"  class="form-control col-md-7 col-xs-12" name="division" readonly >
+
+                  </div>
+                </div>
+               
+
+               
+
+                <div class="item form-group col-md-6 col-sm-3 col-xs-12">
+                  <label class="control-label col-md-4 col-sm-3 col-xs-12">Branch 
+                  </label>
+                  <div class="col-md-8 col-sm-6 col-xs-12">
+                  
+                     <input type="text" value="{{ branch_id.br_name}}"  class="form-control col-md-7 col-xs-12" name="branch" readonly >
+
+                  </div>
+                </div> 
+
+                <!-- <table>
+                  <tr><td><b>Request Id:</b></td>
+                    <td><input class="form-control" name='request_id' value="{{emp.request_id}}" type="text" required readonly="1"></input></td>
+                    <td>&emsp;</td>
+                    <td><label><b>Employee Code:</b></td>
+                    <td><input class="form-control" name='emp_code' value="{{emp.emp_code}}" type="text" required readonly="1"></input></td>
+                    <td>&emsp;</td>
+                    <td><label><b>Contact No:</b></td>
+                    <td><input class="form-control" name='emp_mobile' value="{{emp.emp_mobile}}" type="text" required readonly="1"></input></td>
+                  </tr>
+                  <tr>
+                  <td>&emsp;</td>
+                  </tr>
+                  <tr>
+                    <td><label><b>Name:</b></td>
+                    <td><input class="form-control" name='emp_fname' type="text" value={{emp.emp_fname}}&nbsp;{{emp.emp_lname}} required readonly="1"></input></td>
+                    <td>&emsp;</td>
+                    <td><label><b>Email:</b></td>
+                    <td><input class="form-control" name='emp_email' type="text" value="{{emp.emp_email}}"  required readonly="1"></input></td>
+                    <td>&emsp;</td>
+                    <td><label><b>Branch:</b></td>
+                    <td><input class="form-control" name='emp_br' value="{{emp.emp_br.br_name}}" type="text" readonly="1" readonly="1" ></input></td>
+                  </tr>
+                  <td>&emsp;</td>
+                  <tr>
+                    <td><label><b>Division:</b></td>
+                    <td><input class="form-control" name='emp_div' value="{{emp.emp_div.div_name}}" type="text" required readonly="1"></input></td>
+                    <td>&emsp;</td>
+                    <td><label><b>Designation:</b></td>
+                    <td><input class="form-control" name='emp_desg' value="{{emp.emp_desg.desg_name}}" type="text" required readonly="1"></input></td>
+                    <td>&emsp;</td>
+                    <td><label><b>Department:</b></td>
+                    <td><input class="form-control" name='emp_dept' value="{{emp.emp_dept.dept_name}}" readonly="1" ></input></td>
+                  </tr>
+                  <td>&emsp;</td>
+                   <tr>
+                    <td><label><b>Branch Manager:</b></td>
+                    <td><input class="form-control" name='emp_bm' value="{{emp.emp_manager.bm_name}}" type="text" required readonly="1"></input></td>
+                    <td>&emsp;</td>
+                    <td><label><b>Date of Joining:</b></td>
+                    <td><input class="form-control" name='emp_doj' value="{{emp.date_of_joining|date:"d-m-Y"}}" readonly="1"></input></td>
+                    <td></td>
+                  </tr>
+                </form>
+              </table> -->
+              <td>&emsp;&emsp;</td>
+              
+<!-- POP UP FOR Gmail - TO SEND MAIL TO ADMIN TO CREATE Gmail ACCOUNT OF USER -->
+<br><br><br>
+               
+               <span class="section">Application Details</span>
+               {% for app_dict in emp_app_list %}
+                <div class="row form-group">
+
+                  <form method="POST"> 
+                  <div class="form-check-inline form-check">
+                    &emsp;
+                    <span class="section">{{app_dict.app_name}}
+                    &emsp;</span>
+                    <label for="inline-gmail" class="form-check-label ">User Name</label>
+                      <input type="text" id="inline-admin" name="app_user_name" class="form-check-input" {% if app_dict.app_login %} value="{{app_dict.app_login}} {% endif %}" readonly></input>
+                     &emsp; &emsp; &emsp; 
+                    <label for="inline-iAuditor" class="form-check-label ">Role</label>
+                      <input type="text" id="inline-admin1" name = 'pswd' value ="{{app_dict.role}}" class="form-check-input" readonly ></input>
+                     &emsp; &emsp; &emsp;
+                     <label for="acc_status" class="form-check-label ">Account Status</label>
+                      <input type="text" id="acc_status" name = 'acc_status' value ="{{app_dict.status}}" readonly   class="form-check-input"></input>
+                     
+                  </div>
+
+                  </form>
+                </div> 
+                {% endfor %}
+
+               <!--  <span class="section">Application Details</span>
+                <div class="row">
+                {% for app_dict in emp_app_list %}
+                  <div class="form-check-inline form-check">
+                    &emsp;
+                    <span class="section">{{app_dict.app_name}}
+                    &emsp;</span>
+                    <label for="inline-gmail" class="control-label col-md-4 col-sm-3 col-xs-12">User Name</label>
+                      <input type="text" id="inline-admin" name="app_user_name" class="form-control col-md-7 col-xs-12" {% if app_dict.app_login %} value="{{app_dict.app_login}} {% endif %}" readonly></input>
+                     &emsp; &emsp; &emsp; 
+                    <label for="inline-iAuditor" class="control-label col-md-4 col-sm-3 col-xs-12">Role</label>
+                      <input type="text" id="inline-admin1" name = 'pswd' value ="{{app_dict.role}}" class="form-control col-md-7 col-xs-12" readonly ></input>
+                     &emsp; &emsp; &emsp;
+                     <label for="acc_status" class="control-label col-md-4 col-sm-3 col-xs-12">Account Status</label>
+                      <input type="text" id="acc_status" name = 'acc_status' value ="{{app_dict.status}}" readonly   class="form-control col-md-7 col-xs-12"></input>
+                     
+                  </div>
+                {% endfor %}
+
+                </div> -->
+             
+             
+<!-- POP UP CLOSE FOR SPA ACCOUNT  -->
+
+            
+
+              <!-- <button type="button" class="btn btn-success pull-left" data-toggle="modal" data-target=".bs-example-modal-lg">Approve</button> -->
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock content %}
+
+{% block javascripts %}
+  {{ block.super }}
+  <!-- validator -->
+  <script src="/static/vendors/validator/validator.js"></script>
+{% endblock javascripts %}

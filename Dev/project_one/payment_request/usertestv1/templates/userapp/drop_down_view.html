@@ -1,0 +1,49 @@
+{% if drop_down_type == "region" %}
+<option value="">select</option>
+
+{% if data_list.all %}
+{% for data in data_list %}
+<option value="{{ data.id }}">{{ data.rg_name }} ({{ data.manager_code }})</option>
+{% endfor %}
+{% else %}
+    <option selected value="0"  >None</option> 
+{% endif %}
+
+{% endif %}
+
+
+
+{% if drop_down_type == "division" %}
+<option value="">select</option>
+{% if data_list.all %}
+{% for data in data_list %}
+<option value="{{ data.id }}">{{ data.div_name }} ({{ data.manager_code }})</option>
+{% endfor %}
+{% else %}
+    <option selected   value="0" >None</option> 
+{% endif %}
+{% endif %}
+
+
+{% if drop_down_type == "branch" %}
+<option value="">select</option>
+{% if data_list.all %}
+{% for data in data_list %}
+<option value="{{ data.id }}">{{ data.br_name }}</option>
+{% endfor %}
+{% else %}
+    <option selected  value="0"  >None</option> 
+{% endif %}
+{% endif %}
+
+
+{% if drop_down_type == "psd_branch" %}
+<option value="">select</option>
+{% if data_list.all %}
+{% for data in data_list %}
+<option value="{{ data.id }}">{{ data.br_name }}</option>
+{% endfor %}
+{% else %}
+    <option selected  value="0"  >None</option> 
+{% endif %}
+{% endif %}

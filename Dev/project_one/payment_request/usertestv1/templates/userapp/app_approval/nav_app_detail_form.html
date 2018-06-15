@@ -1,0 +1,242 @@
+<!-- template to show employee details to Branch Manager -->
+
+{% extends "userapp/base_site.html" %} {% block title %} Form Validation {% endblock title %} {% block container_body %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="google-form-master/google-form.js"></script>
+<div class="right_col" role="main">
+    <div class="">
+        <div class="page-title">
+            <div class="title_center">
+                <h3> {{emp_app.app_name}} app approval form</h3>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+
+        <div class="row">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
+                    <div class="x_content">
+
+                        <form class="form-group form-label-left" id="approvalForm" method="POST" action="{% url 'edit_emp_app' emp_app_detail.id %}">{% csrf_token %}
+
+                            <!--   <form class="form-horizontal form-label-left"> -->
+                            <div class="row">
+                                <div class="item form-group col-md-4 col-sm-3 col-xs-12">
+                                    <label class="control-label col-md-4 col-sm-3 col-xs-12">Request ID
+                                    </label>
+                                    <div class="col-md-8 col-sm-6 col-xs-12">
+                                        <input type="text" value="{{emp.request_id.request_id}}" readonly class="form-control col-md-7 col-xs-12">
+                                    </div>
+                                </div>
+
+                                <div class="item form-group col-md-4 col-sm-3 col-xs-12">
+                                    <label class="control-label col-md-4 col-sm-3 col-xs-12">Emp Code
+                                    </label>
+                                    <div class="col-md-8 col-sm-6 col-xs-12">
+                                        <input type="text" value="{{emp.emp_code}}" readonly class="form-control col-md-7 col-xs-12">
+                                    </div>
+                                </div>
+
+                                <!-- <input type="text" value={{emp.emp_code}} hidden name="emp_code">
+                                     <input type="text" value="{{manager}}" name = 'manager' hidden readonly > -->
+
+                                <div class="item form-group col-md-4 col-sm-3 col-xs-12 ">
+                                    <label class="control-label col-md-4 col-sm-3 col-xs-12">First Name
+                                    </label>
+                                    <div class="col-md-8 col-sm-6 col-xs-12">
+                                        <input type="text" value="{{emp.emp_fname}}" readonly class="form-control col-md-7 col-xs-12">
+                                    </div>
+                                </div>
+
+                                <div class="item form-group col-md-4 col-sm-3 col-xs-12 ">
+                                    <label class="control-label col-md-4 col-sm-3 col-xs-12">Last Name
+                                    </label>
+                                    <div class="col-md-8 col-sm-6 col-xs-12">
+                                        <input type="text" value="{{emp.emp_lname}}" readonly class="form-control col-md-7 col-xs-12">
+                                    </div>
+                                </div>
+
+                                <div class="item form-group col-md-4 col-sm-3 col-xs-12 ">
+                                    <label class="control-label col-md-4 col-sm-3 col-xs-12">Date of Birth
+                                    </label>
+                                    <div class="col-md-8 col-sm-6 col-xs-12">
+                                        <input type="text" value="{{emp.emp_dob|date:" d-m-Y "}}" readonly class="form-control col-md-7 col-xs-12">
+                                    </div>
+                                </div>
+
+                                <div class="item form-group col-md-4 col-sm-3 col-xs-12">
+                                    <label class="control-label col-md-4 col-sm-3 col-xs-12">Personal Email ID
+                                    </label>
+                                    <div class="col-md-8 col-sm-6 col-xs-12">
+                                        <input type="email" value="{{emp.emp_email}}" readonly class="form-control col-md-7 col-xs-12">
+                                    </div>
+                                </div>
+
+                                <div class="item form-group col-md-4 col-sm-3 col-xs-12">
+                                    <label class="control-label col-md-4 col-sm-3 col-xs-12">Mobile No.
+                                    </label>
+                                    <div class="col-md-8 col-sm-6 col-xs-12">
+                                        <input type="text" value="{{emp.emp_mobile}}" readonly class="form-control col-md-7 col-xs-12">
+                                    </div>
+                                </div>
+
+                                <div class="item form-group col-md-4 col-sm-3 col-xs-12">
+                                    <label class="control-label col-md-4 col-sm-3 col-xs-12">{{location_type|lower|capfirst}}
+                                    </label>
+                                    <div class="col-md-8 col-sm-6 col-xs-12">
+                                        <input type="text" value="{{location}}" readonly class="form-control col-md-7 col-xs-12">
+                                    </div>
+                                </div>
+
+                                <div class="item form-group col-md-4 col-sm-3 col-xs-12">
+                                    <label class="control-label col-md-4 col-sm-3 col-xs-12">Designation
+                                    </label>
+                                    <div class="col-md-8 col-sm-6 col-xs-12">
+                                        <input type="text" value="{{emp.emp_desg.desg_name}}" readonly class="form-control col-md-7 col-xs-12">
+                                    </div>
+                                </div>
+
+                                <div class="item form-group col-md-4 col-sm-3 col-xs-12">
+                                    <label class="control-label col-md-4 col-sm-3 col-xs-12">Date of Joining
+                                    </label>
+                                    <div class="col-md-8 col-sm-6 col-xs-12">
+                                        <input type="text" value="{{emp.date_of_joining|date:" d-m-Y "}}" readonly class="form-control col-md-7 col-xs-12">
+                                    </div>
+                                </div>
+
+                                <div class="item form-group col-md-4 col-sm-3 col-xs-12">
+                                    <label class="control-label col-md-4 col-sm-3 col-xs-12">Reporting Authority
+                                    </label>
+                                    <div class="col-md-8 col-sm-6 col-xs-12">
+                                        <input type="text" value="{{emp.reporting_authority}}" name='manager' readonly class="form-control ">
+                                    </div>
+                                </div>
+                                <div class="item form-group col-md-4 col-sm-3 col-xs-12">
+                                    <label class="control-label col-md-4 col-sm-3 col-xs-12">Address
+                                    </label>
+                                    <div class="col-md-8 col-sm-6 col-xs-12">
+                                        <textarea type="text" value="{{emp.emp_address}}" readonly class="form-control col-md-7 col-xs-12">{{emp.emp_address}}</textarea>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <span class="section">New user id request</span>
+                            <div class="row">
+
+                                {% for key,value in nav_dict.items %} {% if key != 'Notes' %}
+                                <div class="item form-group col-md-4 col-sm-3 col-xs-12">
+                                    <label class="control-label col-md-4 col-sm-3 col-xs-12">{{key}}
+                                    </label>
+                                    <div class="col-md-8 col-sm-6 col-xs-12">
+
+                                        <input type="text" value="{{value}}" readonly class="form-control col-md-7 col-xs-12">
+
+                                    </div>
+                                </div>
+                                {% endif %} {% endfor %}
+                                
+                                <div class="item form-group col-md-4 col-sm-3 col-xs-12">
+                                    <label class="control-label col-md-4 col-sm-3 col-xs-12">Access type
+                                    </label>
+                                    <div class="col-md-8 col-sm-6 col-xs-12">
+
+                                        <input type="text" value="{{emp_app_detail.app_access_types}}" readonly class="form-control col-md-7 col-xs-12">
+                                    </div>
+                                </div>
+                                </div>
+                                
+                                <div class="row">
+
+                                <div class="item form-group col-md-4 col-sm-3 col-xs-12">
+                                    <label class="control-label col-md-4 col-sm-3 col-xs-12">Add Ticket ID<span class="required">*</span>
+                                    </label>
+                                    <div class="col-md-8 col-sm-6 col-xs-12">
+                                        <input type="text" placeholder="Enter Service Now Ticket ID" class="form-control col-md-7 col-xs-12" name="ticket" required>
+                                    </div>
+                                </div>
+
+                                <div class="item form-group col-md-4 col-sm-3 col-xs-12">
+                                    <label class="control-label col-md-4 col-sm-3 col-xs-12">Add Username<span class="required">*</span>
+                                    </label>
+                                    <div class="col-md-8 col-sm-6 col-xs-12">
+                                        <input type="text" placeholder="Enter Username" class="form-control col-md-7 col-xs-12" name="app_user_name" required>
+                                    </div>
+                                </div>
+
+                                <div class="item form-group col-md-4 col-sm-3 col-xs-12">
+                                    <label class="control-label col-md-4 col-sm-3 col-xs-12">Add Password (Optional)
+                                    </label>
+                                    <div class="col-md-8 col-sm-6 col-xs-12">
+                                        <input type="password" name='app_pass' class="form-control col-md-7 col-xs-12" id="app_pass">
+                                        <input type="checkbox" onclick="showPass()">Show Password
+                                    </div>
+
+                                </div>
+                                {% for key,value in nav_dict.items %} {% if key == 'Notes' %}
+                                <div class="item form-group col-md-4 col-sm-3 col-xs-12">
+                                    <label class="control-label col-md-4 col-sm-3 col-xs-12">{{key}}
+
+                                    </label>
+                                    <div class="col-md-8 col-sm-6 col-xs-12">
+
+                                        <textarea class="form-control" rows="5" value="{{value}}" name="notes" id="notes" readonly>{{value}}</textarea>
+
+                                    </div>
+                                </div>
+                                {% endif %} {% endfor %}
+
+                                <script>
+                                    function showPass() {
+                                        var x = document.getElementById("app_pass");
+                                        if (x.type === "password") {
+                                            x.type = "text";
+                                        } else {
+                                            x.type = "password";
+                                        }
+                                    }
+                                </script>
+                            </div>
+                            <div class="item form-group col-md-12 col-sm-3 col-xs-12">
+                                <button type="submit" class="btn btn-primary  pull-right">Submit</button>
+                                <button type="button" class="btn btn-default pull-right" data-dismiss="modal">Close</button>
+                            </div>
+
+                            <!--   Model box for App Request access -->
+
+                            <!--  End Model box for App Request access -->
+
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+
+<script type="text/javascript">
+    function showValue(target) {
+        var val_2 = ''
+        if (target) {
+            chk = document.getElementById(target)
+            if (chk.checked == true) {
+                val_2 = '_s'
+                val = target.concat(val_2)
+                select_id = document.getElementById(val).disabled = false;
+            } else {
+                val_2 = '_s'
+                val = target.concat(val_2)
+                select_id = document.getElementById(val).disabled = true;
+            }
+        } else
+            alert('Something went wrong');
+    }
+</script>
+
+{% endblock container_body %} {% block javascripts %} {{ block.super }}
+<!-- validator -->
+<script src="/static/vendors/validator/validator.js"></script>
+{% endblock javascripts %}
